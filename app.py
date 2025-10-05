@@ -20,9 +20,11 @@ import io
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-# Load environment variables from .env file in the same directory as this script.
-basedir = os.path.abspath(os.path.dirname(__file__))
-load_dotenv(os.path.join(basedir, '.env'))
+# Load environment variables from .env file for local development.
+# In a production environment like Render, variables are set directly.
+if os.getenv('RENDER') is None:
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    load_dotenv(os.path.join(basedir, '.env'))
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
