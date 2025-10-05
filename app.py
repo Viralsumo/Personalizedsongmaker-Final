@@ -80,7 +80,54 @@ def init_db():
         db.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = db.cursor()
 
-        # Create table matching all columns used in the application
+        # This is a safe, idempotent initialization.
+        # It ensures the table exists but does NOT drop it, preserving data.
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS tasks (
+                id SERIAL PRIMARY KEY,
+                task_id TEXT UNIQUE NOT NULL,
+                name TEXT,
+                occasion TEXT,
+                style TEXT,
+                user_details TEXT,
+                lyrics TEXT,
+                status TEXT NOT NULL,
+                audio_links TEXT,
+                payment_status TEXT DEFAULT 'unpaid',
+                paypal_order_id TEXT,
+                email TEXT,
+                error_message TEXT,
+                ip_address TEXT,
+                country TEXT,
+                user_agent TEXT,
+                referrer TEXT,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                completed_at TIMESTAMP,
+                paid_at TIMESTAMP
+            );
+        """)
+
+        # Manual Migration: Add new columns if they don't exist.
+        # This is a safe way to update the schema without losing data.
+        columns_to_add = {
+            'shareable_id': 'TEXT UNIQUE',
+            'recipient_message': 'TEXT',
+            'is_shared': 'BOOLEAN DEFAULT false',
+            'share_page_views': 'INT DEFAULT 0'
+        }
+
+        for column, col_type in columns_to_add.items():
+            cur.execute("""
+                SELECT 1 FROM information_schema.columns 
+                WHERE table_name='tasks' AND column_name=%s
+            """, (column,))
+            
+            if cur.fetchone() is None:
+                # Column does not exist, so add it
+                alter_query = f"ALTER TABLE tasks ADD COLUMN {column} {col_type};"
+                cur.execute(alter_query)
+                logger.info(f"Added missing column '{column}' to 'tasks' table.")
+
         cur.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id SERIAL PRIMARY KEY,
@@ -105,8 +152,7 @@ def init_db():
                 paid_at TIMESTAMP,
                 shareable_id TEXT UNIQUE,
                 recipient_message TEXT,
-                is_shared BOOLEAN DEFAULT false,
-                share_page_views INT DEFAULT 0
+                is_shared BOOLEAN DEFAULT false
             );
         """)
         logger.info("DB initialized: 'tasks' table ensured.")
