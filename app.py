@@ -66,7 +66,6 @@ def get_db():
     db = psycopg2.connect(db_url)
     return db
 
-@app.before_first_request
 def init_db():
     """Create tasks table if not exists on app startup."""
     db = None
@@ -112,6 +111,9 @@ def init_db():
     finally:
         if cur: cur.close()
         if db: db.close()
+
+# Call init_db() at module level (runs on import, once per worker)
+init_db()
 
 if not app.config['SUNO_API_KEY']:
     logger.error("Suno API key is missing in .env")
