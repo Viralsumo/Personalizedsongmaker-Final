@@ -65,27 +65,33 @@ def get_db():
     db = psycopg2.connect(db_url)
     return db
 
-def init_db():
-    with app.app_context():
-        db = None
-        cur = None
-        try:
-            db = get_db()
-            cur = db.cursor()
-            with open('schema.sql', 'r') as f:
+def ensure_db_initialized():
+    """Ensures the 'tasks' table exists in the database."""
+    db = None
+    cur = None
+    try:
+        db = get_db()
+        cur = db.cursor()
+        cur.execute("SELECT to_regclass('public.tasks');")
+        result = cur.fetchone()
+        if result[0] is None:
+            logger.info("Table 'tasks' not found. Initializing database schema...")
+            with open(os.path.join(basedir, 'schema.sql'), 'r') as f:
                 cur.execute(f.read())
             db.commit()
-        finally:
-            if cur:
-                cur.close()
-            if db:
-                db.close()
+            logger.info("Database schema initialized successfully.")
+        else:
+            logger.info("Database already initialized.")
+    except Exception as e:
+        logger.error(f"Error checking/initializing DB: {e}")
+    finally:
+        if cur: cur.close()
+        if db: db.close()
 
 @app.cli.command('init-db')
 def init_db_command():
     """Creates the database tables."""
-    init_db()
-    logger.info('Initialized the database.')
+    ensure_db_initialized()
 
 if not app.config['SUNO_API_KEY']:
     logger.error("Suno API key is missing in .env")
