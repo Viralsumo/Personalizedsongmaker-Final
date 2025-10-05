@@ -4,6 +4,7 @@ import json
 import os
 import random
 import psycopg2
+from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 import psycopg2.extras
 import logging
 from functools import wraps
@@ -65,33 +66,52 @@ def get_db():
     db = psycopg2.connect(db_url)
     return db
 
-def ensure_db_initialized():
-    """Ensures the 'tasks' table exists in the database."""
+@app.before_first_request
+def init_db():
+    """Create tasks table if not exists on app startup."""
     db = None
     cur = None
     try:
-        db = get_db()
+        db_url = app.config.get('DATABASE_URL')
+        if not db_url:
+            logger.warning("No DATABASE_URL—skipping DB init.")
+            return
+
+        db = psycopg2.connect(db_url)
+        db.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = db.cursor()
-        cur.execute("SELECT to_regclass('public.tasks');")
-        result = cur.fetchone()
-        if result[0] is None:
-            logger.info("Table 'tasks' not found. Initializing database schema...")
-            with open(os.path.join(basedir, 'schema.sql'), 'r') as f:
-                cur.execute(f.read())
-            db.commit()
-            logger.info("Database schema initialized successfully.")
-        else:
-            logger.info("Database already initialized.")
+
+        # Create table matching all columns used in the application
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS tasks (
+                id SERIAL PRIMARY KEY,
+                task_id TEXT UNIQUE NOT NULL,
+                name TEXT,
+                occasion TEXT,
+                style TEXT,
+                user_details TEXT,
+                lyrics TEXT,
+                status TEXT NOT NULL,
+                audio_links TEXT,
+                payment_status TEXT DEFAULT 'unpaid',
+                paypal_order_id TEXT,
+                email TEXT,
+                error_message TEXT,
+                ip_address TEXT,
+                country TEXT,
+                user_agent TEXT,
+                referrer TEXT,
+                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                completed_at TIMESTAMP,
+                paid_at TIMESTAMP
+            );
+        """)
+        logger.info("DB initialized: 'tasks' table ensured.")
     except Exception as e:
         logger.error(f"Error checking/initializing DB: {e}")
     finally:
         if cur: cur.close()
         if db: db.close()
-
-@app.cli.command('init-db')
-def init_db_command():
-    """Creates the database tables."""
-    ensure_db_initialized()
 
 if not app.config['SUNO_API_KEY']:
     logger.error("Suno API key is missing in .env")
