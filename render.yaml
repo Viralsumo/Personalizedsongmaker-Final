@@ -1,28 +1,4 @@
-services:
-  - type: web
-    name: tunetailor
-    env: python
-    plan: free # Or your desired plan
-    buildCommand: "./build.sh"
-    startCommand: "gunicorn --bind 0.0.0.0:$PORT app:application"
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.19 # Match your local Python version
-      - key: FLASK_APP
-        value: app.py
-      - key: RENDER_DISK_PATH
-        value: /var/data # The mount path for the persistent disk
-      - key: PUBLIC_URL
-        fromService:
-          type: web
-          name: tunetailor
-          property: url
-      - fromGroup: tunetailor-secrets
-    disks:
-      - name: data-disk
-        mountPath: /var/data
-        sizeGB: 1
-
+# Defines the secret keys and credentials that will be configured in the Render dashboard.
 envVarGroups:
   - name: tunetailor-secrets
     envVars:
@@ -35,3 +11,31 @@ envVarGroups:
       - key: PAYPAL_CLIENT_SECRET
       - key: SONG_PRICE
       - key: PAYPAL_MODE
+
+# Defines the managed PostgreSQL database service.
+databases:
+  - name: tunetailor-db
+    databaseName: tunetailor_db # The name of the database inside postgres
+    plan: free
+
+# Defines the web service that runs the Flask application.
+services:
+  - type: web
+    name: tunetailor
+    env: python
+    plan: free
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn app:application"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.19
+      - key: DATABASE_URL
+        fromDatabase:
+          name: tunetailor-db
+          property: internalUrl
+      - key: PUBLIC_URL
+        fromService:
+          name: tunetailor
+          type: web
+          property: url
+      - fromGroup: tunetailor-secrets
