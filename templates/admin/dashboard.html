@@ -135,32 +135,18 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="card mb-4">
-                    <div class="card-header">Top 5 Song Styles</div>
-                    <ul class="list-group list-group-flush">
-                        {% for item in kpis.top_styles %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ item.style | capitalize }}
-                                <span class="badge bg-primary rounded-pill">{{ item.count }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
         </div>
 
         <!-- Top Lists -->
         <div class="row mt-4">
             <div class="col-lg-4">
                 <div class="card">
-                    <div class="card-header">Top 5 Song Styles</div>
+                    <div class="card-header">Top 5 Occasions</div>
                     <ul class="list-group list-group-flush">
-                        {% for item in kpis.top_styles %}
+                        {% for item in kpis.top_occasions %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ item.style | capitalize }}
-                                <span class="badge bg-info rounded-pill">{{ item.count }}</span>
+                                {{ item['occasion'] | capitalize }}
+                                <span class="badge bg-success rounded-pill">{{ item['count'] }}</span>
                             </li>
                         {% endfor %}
                     </ul>
@@ -168,12 +154,25 @@
             </div>
             <div class="col-lg-4">
                 <div class="card">
-                    <div class="card-header">Top 5 Occasions</div>
+                    <div class="card-header">Top 5 Countries</div>
                     <ul class="list-group list-group-flush">
-                        {% for item in kpis.top_occasions %}
+                        {% for item in kpis.top_countries %}
                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ item.occasion | capitalize }}
-                                <span class="badge bg-success rounded-pill">{{ item.count }}</span>
+                                {{ item['country'] }}
+                                <span class="badge bg-primary rounded-pill">{{ item['count'] }}</span>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">Top 5 Song Styles</div>
+                    <ul class="list-group list-group-flush">
+                        {% for item in kpis.top_styles %}
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                {{ item['style'] | capitalize }}
+                                <span class="badge bg-info rounded-pill">{{ item['count'] }}</span>
                             </li>
                         {% endfor %}
                     </ul>
@@ -181,19 +180,5 @@
             </div>
         </div>
     </div>
-            <div class="col-lg-4">
-                <div class="card">
-                    <div class="card-header">Top 5 Countries</div>
-                    <ul class="list-group list-group-flush">
-                        {% for item in kpis.top_countries %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {{ item.country }}
-                                <span class="badge bg-primary rounded-pill">{{ item.count }}</span>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div>
 </body>
 </html>
