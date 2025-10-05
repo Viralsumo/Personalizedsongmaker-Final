@@ -93,7 +93,7 @@
                                 <td>{{ task.name }}</td>
                                 <td>{{ task.occasion }}</td>
                                 <td>{{ task.style }}</td>
-                                <td>{{ task.created_at.split('.')[0] }}</td>
+                                <td>{{ task.created_at.strftime('%Y-%m-%d %H:%M:%S') if task.created_at else 'N/A' }}</td>
                                 <td><small class="text-danger">{{ task.error_message or '' }}</small></td>
                                 <td>
                                     <button class="btn btn-sm btn-info view-details-btn" 
