@@ -102,7 +102,7 @@ def init_db():
                 referrer TEXT,
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 completed_at TIMESTAMP,
-                paid_at TIMESTAMP
+                paid_at TIMESTAMP,
                 shareable_id TEXT UNIQUE,
                 recipient_message TEXT,
                 is_shared BOOLEAN DEFAULT false,
