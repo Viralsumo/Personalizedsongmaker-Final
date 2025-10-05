@@ -232,17 +232,18 @@ def get_geolocation(ip_address):
     if ip_address == '127.0.0.1' or ip_address.startswith('192.168.') or ip_address.startswith('10.'):
         return "Local"
     try:
-        # Using a free, no-key-required API
         url = f"http://ip-api.com/json/{ip_address}?fields=country"
-        response = requests.get(url, timeout=2)
-        response.raise_for_status()
-        data = response.json()
-        country = data.get('country', 'Unknown')
-        logger.info(f"Geolocation for {ip_address}: {country}")
+        response = requests.get(url, timeout=3)
+        if response.status_code == 200:
+            country = response.json().get('country', 'Unknown')
+            logger.info(f"Geolocation for {ip_address}: {country}")
+        else:
+            logger.warning(f"Geolocation API returned status {response.status_code} for IP {ip_address}")
+            country = 'Unknown'
         return country
-    except requests.RequestException as e:
-        logger.error(f"Could not get geolocation for IP {ip_address}: {e}")
-        return "Unavailable"
+    except Exception as e:
+        logger.error(f"Geolocation request failed for IP {ip_address}: {e}")
+        return 'Unknown'
 
 @app.route('/generate_song', methods=['POST'])
 def generate_song():
@@ -275,15 +276,22 @@ def generate_song():
         logger.info(f"Returning task ID {task_id} for frontend polling")
 
         # --- Store task in database ---
-        db = get_db()
-        cur = db.cursor()
-        cur.execute(
-            'INSERT INTO tasks (task_id, status, name, user_details, lyrics, occasion, style, ip_address, country, user_agent, referrer) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
-            (task_id, 'pending', name, details, lyrics, occasion, style, user_ip, user_country, user_agent, referrer)
-        )
-        db.commit()
-        cur.close()
-        db.close()
+        db = None
+        cur = None
+        try:
+            db = get_db()
+            cur = db.cursor()
+            cur.execute(
+                'INSERT INTO tasks (task_id, status, name, user_details, lyrics, occasion, style, ip_address, country, user_agent, referrer) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
+                (task_id, 'pending', name, details, lyrics, occasion, style, user_ip, user_country, user_agent, referrer)
+            )
+            db.commit()
+        except Exception as e:
+            logger.error(f"DB insert failed (non-fatal): {e}")
+            if db: db.rollback()  # Undo partial insert
+        finally:
+            if cur: cur.close()
+            if db: db.close()
 
         return jsonify({"task_id": task_id, "status": "pending"}), 202
     except Exception as e:
