@@ -103,6 +103,9 @@ def init_db():
                 created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 completed_at TIMESTAMP,
                 paid_at TIMESTAMP
+                shareable_id TEXT UNIQUE,
+                recipient_message TEXT,
+                is_shared BOOLEAN DEFAULT false
             );
         """)
         logger.info("DB initialized: 'tasks' table ensured.")
@@ -566,6 +569,49 @@ def save_email():
     except Exception as e:
         logger.error(f"Could not save email for task {task_id}: {e}")
         return jsonify({"error": "Failed to save email."}), 500
+
+@app.route('/create_shareable_page', methods=['POST'])
+def create_shareable_page():
+    """Creates a unique shareable page for a paid task."""
+    data = request.get_json()
+    task_id = data.get('task_id')
+    message = data.get('message')
+
+    if not task_id or not message:
+        return jsonify({"error": "Task ID and message are required."}), 400
+
+    # Generate a unique, shareable ID
+    shareable_id = os.urandom(8).hex()
+
+    db = get_db()
+    cur = db.cursor()
+    cur.execute(
+        "UPDATE tasks SET shareable_id = %s, recipient_message = %s, is_shared = true WHERE task_id = %s",
+        (shareable_id, message, task_id)
+    )
+    db.commit()
+    cur.close()
+    db.close()
+
+    share_url = f"{app.config['PUBLIC_URL']}/share/{shareable_id}"
+    logger.info(f"Created shareable page for task {task_id} at {share_url}")
+    return jsonify({"status": "success", "share_url": share_url})
+
+@app.route('/share/<shareable_id>')
+def show_shareable_page(shareable_id):
+    """Displays the public, shareable song page."""
+    db = get_db()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute("SELECT * FROM tasks WHERE shareable_id = %s", (shareable_id,))
+    task = cur.fetchone()
+    cur.close()
+    db.close()
+
+    if not task:
+        return "This song page was not found.", 404
+
+    audio_links = json.loads(task['audio_links'])
+    return render_template('share_page.html', task=task, audio_links=audio_links)
 
 @app.route('/terms')
 def terms():

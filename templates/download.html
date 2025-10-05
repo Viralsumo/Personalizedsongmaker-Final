@@ -88,12 +88,23 @@
         .footer-link:hover {
             text-decoration: underline;
         }
+        .share-card {
+            background-color: #f0f4f8;
+            border: 1px solid #dee2e6;
+        }
+        #share-link-container {
+            display: none; /* Hidden by default */
+        }
+        #share-link {
+            font-family: monospace;
+            background-color: #e9ecef;
+        }
     </style>
 </head>
 <body>
     <nav class="navbar navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">TuneTailor</a>
+            <a class="navbar-brand" href="/">Personalized Song Maker</a>
         </div>
     </nav>
     <div class="container">
@@ -123,17 +134,28 @@
                 </span>
             </div>
 
-            <!-- Email Form Section -->
-            <div class="mt-5 p-4 bg-light border rounded-3" id="email-section">
-                <h4 class="mb-3">Get a Backup!</h4>
-                <p>Enter your email below and we'll send you a copy of your receipt and download links.</p>
-                <div class="input-group">
-                    <input type="email" id="user-email" class="form-control" placeholder="your.email@example.com">
-                    <button class="btn btn-outline-primary" type="button" id="save-email-btn">Send Backup</button>
+            <hr class="my-4">
+
+            <!-- Shareable Page Creator -->
+            <div class="p-4 share-card rounded-3">
+                <h2 class="mb-3 text-center">Share These Amazing Songs With {{ session.name }} by a Free Personalized Sharable Gift Page! 🎁</h2>
+                <p class="text-center">Write a special message for {{ session.name }} and we'll create a beautiful, dedicated webpage with the song that you can share.</p>
+                
+                <form id="share-form">
+                    <div class="mb-3">
+                        <textarea id="share-message" class="form-control" rows="4" placeholder="e.g., Happy Birthday! I hope you love this song I made just for you. Love, [Your Name]" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Shareable Page</button>
+                </form>
+    
+                <div id="share-link-container" class="mt-4 text-center">
+                    <h5>Your page is ready! Copy and share this link:</h5>
+                    <div class="input-group">
+                        <input type="text" id="share-link" class="form-control" readonly>
+                        <button class="btn btn-outline-secondary" id="copy-link-btn" type="button">Copy</button>
+                    </div>
                 </div>
-                <div id="email-feedback" class="form-text mt-2"></div>
             </div>
-            <!-- End Email Form -->
 
             <div class="text-center mt-4">
                 <p class="fw-bold">Share your creation!</p>
@@ -149,8 +171,22 @@
             <p class="mt-4 text-center text-muted">Note: Download links may expire. Please save your songs promptly.</p>
         </div>
     </div>
+
+    <!-- Email Form Section (Moved to bottom) -->
+    <div class="container mt-4">
+        <div class="card p-4 bg-light" id="email-section">
+            <h4 class="mb-3 text-center">Get a Backup!</h4>
+            <p class="text-center">Enter your email below and we'll send you a copy of your receipt and download links.</p>
+            <div class="input-group">
+                <input type="email" id="user-email" class="form-control" placeholder="your.email@example.com">
+                <button class="btn btn-outline-primary" type="button" id="save-email-btn">Send Backup</button>
+            </div>
+            <div id="email-feedback" class="form-text mt-2 text-center"></div>
+        </div>
+    </div>
+
     <footer>
-        <p>&copy; 2025 TuneTailor. <a href="/terms" class="footer-link">Terms</a> | <a href="/privacy" class="footer-link">Privacy</a></p>
+        <p>&copy; 2025 Personalized Song Maker. <a href="/terms" class="footer-link">Terms</a> | <a href="/privacy" class="footer-link">Privacy</a></p>
     </footer>
 
     <script>
@@ -190,6 +226,45 @@
             });
 
             emailSection.innerHTML = '<p class="text-center text-success fw-bold">Thank you! A backup has been sent to your email.</p>';
+        });
+
+        // --- Shareable Page Functionality ---
+        document.getElementById('share-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const message = document.getElementById('share-message').value;
+            const taskId = '{{ task_id }}';
+
+            try {
+                const response = await fetch('/create_shareable_page', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ task_id: taskId, message: message })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to create shareable page.');
+                }
+
+                const data = await response.json();
+                if (data.status === 'success') {
+                    document.getElementById('share-link').value = data.share_url;
+                    document.getElementById('share-link-container').style.display = 'block';
+                    document.getElementById('share-form').style.display = 'none'; // Hide the form
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+
+        document.getElementById('copy-link-btn').addEventListener('click', () => {
+            const shareLinkInput = document.getElementById('share-link');
+            shareLinkInput.select();
+            navigator.clipboard.writeText(shareLinkInput.value).then(() => {
+                alert('Link copied to clipboard!');
+            });
         });
     </script>
 </body>
