@@ -4,7 +4,7 @@ services:
     env: python
     plan: free # Or your desired plan
     buildCommand: "./build.sh"
-    startCommand: "gunicorn --bind 0.0.0.0:$PORT application:app"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT app:application"
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.19 # Match your local Python version
