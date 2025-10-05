@@ -123,7 +123,7 @@
                                         <td><a href="{{ url_for('admin_tasks') }}#{{ order.task_id }}">{{ order.task_id[:8] }}...</a></td>
                                         <td>{{ order.name }}</td>
                                         <td>{{ order.email or 'Not provided' }}</td>
-                                        <td>{{ order.paid_at.split('.')[0] if order.paid_at else 'N/A' }}</td>
+                                        <td>{{ order.paid_at.strftime('%Y-%m-%d %H:%M:%S') if order.paid_at else 'N/A' }}</td>
                                     </tr>
                                     {% else %}
                                     <tr>
