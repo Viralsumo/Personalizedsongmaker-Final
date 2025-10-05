@@ -20,10 +20,12 @@ import io
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
+# Define basedir for all environments
+basedir = os.path.abspath(os.path.dirname(__file__))
+
 # Load environment variables from .env file for local development.
 # In a production environment like Render, variables are set directly.
 if os.getenv('RENDER') is None:
-    basedir = os.path.abspath(os.path.dirname(__file__))
     load_dotenv(os.path.join(basedir, '.env'))
 
 app = Flask(__name__)
@@ -49,9 +51,7 @@ else:
 PUBLIC_URL = os.getenv('PUBLIC_URL') # For ngrok or production environment
 
 # --- Data and Database Setup for Production ---
-# On Render, we'll use a persistent disk mounted at the path specified by RENDER_DISK_PATH.
-# For local development, it will default to the project's base directory.
-DATA_DIR = os.getenv('RENDER_DISK_PATH', basedir)
+# The DATA_DIR concept for a persistent disk is no longer used.
 # For Render's free tier, we can't use a local SQLite DB due to the ephemeral filesystem.
 # We will use a PostgreSQL database, provided by Render or another cloud provider.
 DATABASE_URL = os.getenv('DATABASE_URL') # Render provides this automatically for its Postgres service
