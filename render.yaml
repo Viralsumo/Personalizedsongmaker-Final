@@ -1,0 +1,37 @@
+services:
+  - type: web
+    name: tunetailor
+    env: python
+    plan: free # Or your desired plan
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT application:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.9.19 # Match your local Python version
+      - key: FLASK_APP
+        value: app.py
+      - key: RENDER_DISK_PATH
+        value: /var/data # The mount path for the persistent disk
+      - key: PUBLIC_URL
+        fromService:
+          type: web
+          name: tunetailor
+          property: url
+      - fromGroup: tunetailor-secrets
+    disks:
+      - name: data-disk
+        mountPath: /var/data
+        sizeGB: 1
+
+envVarGroups:
+  - name: tunetailor-secrets
+    envVars:
+      - key: OPENAI_API_KEY
+      - key: SUNO_API_KEY
+      - key: FLASK_SECRET_KEY
+      - key: ADMIN_USERNAME
+      - key: ADMIN_PASSWORD
+      - key: PAYPAL_CLIENT_ID
+      - key: PAYPAL_CLIENT_SECRET
+      - key: SONG_PRICE
+      - key: PAYPAL_MODE

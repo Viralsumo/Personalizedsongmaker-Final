@@ -1,0 +1,22 @@
+# Environment variables
+# Contains secret keys - NEVER commit this file!
+.env
+
+# Python virtual environment
+venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Database file
+tunetailor.db
+
+# Generated preview audio files
+previews/
+
+# IDE configuration folders
+.idea/
+.vscode/
