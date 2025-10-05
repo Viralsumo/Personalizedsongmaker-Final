@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS tasks;
 
-CREATE TABLE tasks (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
+CREATE TABLE IF NOT EXISTS tasks (
+  id SERIAL PRIMARY KEY,
   task_id TEXT UNIQUE NOT NULL,
   name TEXT,
   occasion TEXT,
@@ -10,7 +10,6 @@ CREATE TABLE tasks (
   lyrics TEXT,
   status TEXT NOT NULL,
   audio_links TEXT, -- Stored as a JSON string
-  preview_path TEXT, -- Path to the generated preview snippet
   payment_status TEXT DEFAULT 'unpaid',
   paypal_order_id TEXT,
   email TEXT,

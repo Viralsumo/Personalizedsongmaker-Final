@@ -3,7 +3,8 @@ from flask_cors import CORS
 import json
 import os
 import random
-import sqlite3
+import psycopg2
+import psycopg2.extras
 import logging
 from functools import wraps
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ from openai import OpenAI
 import httpx
 import requests
 from pydub import AudioSegment
+from flask import send_from_directory
 import urllib.parse  # Added for URL decoding
 import io
 
@@ -48,20 +50,27 @@ PUBLIC_URL = os.getenv('PUBLIC_URL') # For ngrok or production environment
 # On Render, we'll use a persistent disk mounted at the path specified by RENDER_DISK_PATH.
 # For local development, it will default to the project's base directory.
 DATA_DIR = os.getenv('RENDER_DISK_PATH', basedir)
-DATABASE = os.path.join(DATA_DIR, 'tunetailor.db')
-PREVIEW_DIR = os.path.join(DATA_DIR, 'previews')
+# For Render's free tier, we can't use a local SQLite DB due to the ephemeral filesystem.
+# We will use a PostgreSQL database, provided by Render or another cloud provider.
+DATABASE_URL = os.getenv('DATABASE_URL') # Render provides this automatically for its Postgres service
+
+# The local preview directory is still useful for local dev, but on Render it will be ephemeral.
+# We will generate previews on-the-fly instead of saving them long-term.
+PREVIEW_DIR = os.path.join(basedir, 'previews') # Keep previews local, they are ephemeral anyway
 
 def get_db():
-    os.makedirs(os.path.dirname(DATABASE), exist_ok=True) # Ensure the directory exists
-    db = sqlite3.connect(DATABASE)
-    db.row_factory = sqlite3.Row
+    if not DATABASE_URL:
+        logger.error("DATABASE_URL environment variable is not set.")
+        raise ValueError("DATABASE_URL environment variable is not set. Cannot connect to the database.")
+    db = psycopg2.connect(DATABASE_URL)
     return db
 
 def init_db():
     with app.app_context():
         db = get_db()
         with open('schema.sql', 'r') as f:
-            db.cursor().executescript(f.read())
+            cur = db.cursor()
+            cur.execute(f.read())
         db.commit()
 
 @app.cli.command('init-db')
@@ -233,11 +242,13 @@ def generate_song():
 
         # --- Store task in database ---
         db = get_db()
-        db.execute(
-            'INSERT INTO tasks (task_id, status, name, user_details, lyrics, occasion, style, ip_address, country, user_agent, referrer) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        cur = db.cursor()
+        cur.execute(
+            'INSERT INTO tasks (task_id, status, name, user_details, lyrics, occasion, style, ip_address, country, user_agent, referrer) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)',
             (task_id, 'pending', name, details, lyrics, occasion, style, user_ip, user_country, user_agent, referrer)
         )
         db.commit()
+        cur.close()
         db.close()
 
         return jsonify({"task_id": task_id, "status": "pending"}), 202
@@ -261,69 +272,40 @@ def callback():
             return jsonify({"error": "No task_id provided"}), 400
 
         db = get_db()
+        cur = db.cursor()
         if code != 200:
             logger.error(f"Callback error for task {task_id}: {msg}")
-            db.execute('UPDATE tasks SET status = ?, error_message = ? WHERE task_id = ?', ('error', msg, task_id))
+            cur.execute('UPDATE tasks SET status = %s, error_message = %s WHERE task_id = %s', ('error', msg, task_id))
         else:
             if callback_type == 'complete':
                 songs = inner_data.get('data', [])
                 audio_links = [song.get("audio_url") for song in songs if song.get("audio_url")]
-                db.execute('UPDATE tasks SET status = ?, audio_links = ?, completed_at = CURRENT_TIMESTAMP WHERE task_id = ?',
+                cur.execute('UPDATE tasks SET status = %s, audio_links = %s, completed_at = CURRENT_TIMESTAMP WHERE task_id = %s',
                            ('complete', json.dumps(audio_links), task_id))
                 logger.info(f"Callback stored for task {task_id} with {len(songs)} songs")
             elif callback_type == 'error':
-                db.execute('UPDATE tasks SET status = ?, error_message = ? WHERE task_id = ?', ('error', msg, task_id))
+                cur.execute('UPDATE tasks SET status = %s, error_message = %s WHERE task_id = %s', ('error', msg, task_id))
                 logger.error(f"Error callback for task {task_id}: {msg}")
             else:
                 # For 'text' or 'first', ignore for now
                 logger.info(f"Ignoring intermediate callback type {callback_type} for task {task_id}")
         
         db.commit()
+        cur.close()
         db.close()
         return jsonify({"status": "received"})
     except Exception as e:
         logger.error(f"Exception in callback: {str(e)}")
         return jsonify({"error": f"Callback failed: {str(e)}"}), 500
 
-def create_audio_preview(audio_url: str, task_id: str, index: int) -> str:
-    """Downloads an audio file, creates a 30s preview, and saves it."""
-    try:
-        logger.info(f"Creating preview for task {task_id} from {audio_url}")
-        # Use the persistent disk path for previews
-        os.makedirs(PREVIEW_DIR, exist_ok=True)
-        # Download the full audio file
-        response = requests.get(audio_url, stream=True, timeout=60)
-        response.raise_for_status()
-
-        # Use io.BytesIO to create a seekable in-memory file
-        audio_content = io.BytesIO(response.content)
-        # Load audio using pydub
-        song = AudioSegment.from_file(audio_content, format="mp3")
-
-        # Create a 30-second snippet
-        preview = song[:30000] # pydub works in milliseconds
-
-        # Export the preview
-        preview_filename = f"{task_id}_preview_{index}.mp3"
-        preview_filepath = os.path.join(PREVIEW_DIR, preview_filename)
-        preview.export(preview_filepath, format="mp3")
-        logger.info(f"Successfully created preview at {preview_filepath}")
-        return f"/previews/{preview_filename}" # Use the new /previews route
-    except Exception as e:
-        logger.error(f"Failed to create audio preview for task {task_id}: {e}")
-        return None
-
-@app.route('/previews/<filename>')
-def serve_preview(filename):
-    """Serves preview files from the persistent disk."""
-    logger.debug(f"Serving preview file: {filename} from {PREVIEW_DIR}")
-    return send_from_directory(PREVIEW_DIR, filename)
-
 @app.route('/check_task/<task_id>', methods=['GET'])
 def check_task(task_id):
     logger.debug(f"Checking task status for task_id={task_id}")
     db = get_db()
-    task = db.execute('SELECT * FROM tasks WHERE task_id = ?', (task_id,)).fetchone()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('SELECT * FROM tasks WHERE task_id = %s', (task_id,))
+    task = cur.fetchone()
+    cur.close()
     db.close()
 
     if not task:
@@ -335,39 +317,10 @@ def check_task(task_id):
             logger.info(f"Task {task_id} is complete and paid. Returning links.")
             return jsonify({"status": "completed", "links": links})
         
-        # If complete but not paid, ensure a preview exists or create one.
-        preview_paths_raw = task['preview_path']
-        if not preview_paths_raw:
-            try:
-                # Safely load audio_links, handling None or invalid JSON
-                audio_links_raw = task['audio_links']
-                audio_links = json.loads(audio_links_raw) if audio_links_raw else []
-                if not audio_links:
-                    raise ValueError("Audio links are missing in the completed task.")
-                
-                # Create a preview for each song link
-                created_preview_paths = []
-                for i, link in enumerate(audio_links):
-                    path = create_audio_preview(link, task_id, i + 1)
-                    if path:
-                        created_preview_paths.append(path)
-                
-                if created_preview_paths:
-                    preview_paths_raw = json.dumps(created_preview_paths)
-                    db = get_db()
-                    db.execute('UPDATE tasks SET preview_path = ? WHERE task_id = ?', (preview_paths_raw, task_id))
-                    db.commit()
-                    db.close()
-
-            except (json.JSONDecodeError, TypeError) as e:
-                logger.error(f"Could not create preview for task {task_id} due to invalid audio_links: {e}")
-                return jsonify({"status": "error", "error": "Failed to process completed song data."}), 500
-        
-        # After attempting creation, check if a preview_path exists.
-        if preview_paths_raw:
-            logger.info(f"Task {task_id} is complete, serving previews.")
-            return jsonify({"status": "completed_preview_available", "task_id": task_id})
-        
+        # If complete but not paid, tell the frontend that the preview is available.
+        # The frontend will then navigate to the song_preview page.
+        logger.info(f"Task {task_id} is complete, preview is available.")
+        return jsonify({"status": "completed_preview_available", "task_id": task_id})
     elif task['status'] == 'error':
         logger.error(f"Task {task_id} failed: {task['error_message']}")
         return jsonify({"status": "error", "error": task['error_message']}), 500
@@ -382,7 +335,10 @@ def song_preview(task_id):
     """
     logger.info(f"Rendering song preview page for task {task_id}")
     db = get_db()
-    task = db.execute('SELECT * FROM tasks WHERE task_id = ?', (task_id,)).fetchone()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('SELECT * FROM tasks WHERE task_id = %s', (task_id,))
+    task = cur.fetchone()
+    cur.close()
     db.close()
 
     if not task:
@@ -390,14 +346,14 @@ def song_preview(task_id):
         return "Task not found", 404
 
     # Ensure the task is ready for preview
-    if task['status'] != 'complete' or not task['preview_path']:
+    if task['status'] != 'complete' or not task['audio_links']:
         logger.warning(f"Attempted to access preview page for task {task_id} which is not ready.")
         return "Your song is not ready for preview yet. Please wait.", 400
     
-    # Pass the list of preview paths to the template
-    preview_paths = json.loads(task['preview_path'])
+    # Pass the list of full audio URLs (from Suno) to the template
+    audio_links = json.loads(task['audio_links'])
     task_dict = dict(task)
-    task_dict['preview_paths'] = preview_paths
+    task_dict['preview_paths'] = audio_links # We'll reuse the 'preview_paths' variable name in the template
 
     return render_template('song_preview.html', task=task_dict, paypal_client_id=PAYPAL_CLIENT_ID)
 
@@ -405,7 +361,10 @@ def song_preview(task_id):
 def create_paypal_order(task_id):
     logger.info(f"Creating PayPal order for task_id: {task_id}")
     db = get_db()
-    task = db.execute('SELECT * FROM tasks WHERE task_id = ?', (task_id,)).fetchone()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('SELECT * FROM tasks WHERE task_id = %s', (task_id,))
+    task = cur.fetchone()
+    cur.close()
     db.close()
 
     if not task:
@@ -438,8 +397,10 @@ def create_paypal_order(task_id):
         order_data = response.json()
         
         db = get_db()
-        db.execute('UPDATE tasks SET paypal_order_id = ? WHERE task_id = ?', (order_data['id'], task_id))
+        cur = db.cursor()
+        cur.execute('UPDATE tasks SET paypal_order_id = %s WHERE task_id = %s', (order_data['id'], task_id))
         db.commit()
+        cur.close() # Close cursor
         db.close()
 
         logger.info(f"PayPal order {order_data['id']} created for task {task_id}")
@@ -462,16 +423,20 @@ def capture_paypal_order(order_id):
 
         if capture_data.get('status') == 'COMPLETED':            
             db = get_db()
+            cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
             # Use the order_id to reliably find our task in the database
-            task = db.execute('SELECT task_id, audio_links FROM tasks WHERE paypal_order_id = ?', (order_id,)).fetchone()
+            cur.execute('SELECT task_id, audio_links FROM tasks WHERE paypal_order_id = %s', (order_id,))
+            task = cur.fetchone()
             if not task:
+                cur.close()
                 db.close()
                 logger.error(f"Could not find a task associated with PayPal order_id {order_id}")
                 return jsonify({"error": "Task not found for this order"}), 404
-            
+
             task_id = task['task_id']
-            db.execute('UPDATE tasks SET payment_status = ?, paid_at = CURRENT_TIMESTAMP WHERE task_id = ? AND paypal_order_id = ?',
-                       ('paid', task_id, order_id))
+            # Re-use the cursor to update
+            cur.execute('UPDATE tasks SET payment_status = %s, paid_at = CURRENT_TIMESTAMP WHERE task_id = %s', ('paid', task_id))
+            cur.close()
             db.commit()
             db.close()
 
@@ -547,8 +512,10 @@ def save_email():
 
     try:
         db = get_db()
-        db.execute('UPDATE tasks SET email = ? WHERE task_id = ?', (email, task_id))
+        cur = db.cursor()
+        cur.execute('UPDATE tasks SET email = %s WHERE task_id = %s', (email, task_id))
         db.commit()
+        cur.close() # Close cursor
         db.close()
         logger.info(f"Saved email '{email}' for task '{task_id}'")
         return jsonify({"status": "success", "message": "Email saved successfully."})
@@ -572,14 +539,15 @@ def privacy():
 def admin_dashboard():
     logger.info(f"Admin user '{request.authorization.username}' accessed the dashboard.")
     db = get_db()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     # Key Performance Indicators (KPIs)
-    total_tasks = db.execute('SELECT COUNT(id) FROM tasks').fetchone()[0]
-    completed_tasks = db.execute("SELECT COUNT(id) FROM tasks WHERE status = 'complete'").fetchone()[0]
-    failed_tasks = db.execute("SELECT COUNT(id) FROM tasks WHERE status = 'error'").fetchone()[0]
+    cur.execute('SELECT COUNT(id) FROM tasks'); total_tasks = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(id) FROM tasks WHERE status = 'complete'"); completed_tasks = cur.fetchone()[0]
+    cur.execute("SELECT COUNT(id) FROM tasks WHERE status = 'error'"); failed_tasks = cur.fetchone()[0]
     
     # Order/Revenue KPIs
-    total_paid_orders = db.execute("SELECT COUNT(id) FROM tasks WHERE payment_status = 'paid'").fetchone()[0]
+    cur.execute("SELECT COUNT(id) FROM tasks WHERE payment_status = 'paid'"); total_paid_orders = cur.fetchone()[0]
     try:
         song_price_float = float(SONG_PRICE)
         total_revenue = total_paid_orders * song_price_float
@@ -591,13 +559,14 @@ def admin_dashboard():
     conversion_rate = (total_paid_orders / total_tasks * 100) if total_tasks > 0 else 0
         
     # Top 5 lists
-    top_styles = db.execute('SELECT style, COUNT(id) as count FROM tasks WHERE style IS NOT NULL GROUP BY style ORDER BY count DESC LIMIT 5').fetchall()
-    top_occasions = db.execute('SELECT occasion, COUNT(id) as count FROM tasks WHERE occasion IS NOT NULL GROUP BY occasion ORDER BY count DESC LIMIT 5').fetchall()
-    top_countries = db.execute("SELECT country, COUNT(id) as count FROM tasks WHERE country NOT IN ('Local', 'Unknown', 'Unavailable') GROUP BY country ORDER BY count DESC LIMIT 5").fetchall()
+    cur.execute('SELECT style, COUNT(id) as count FROM tasks WHERE style IS NOT NULL GROUP BY style ORDER BY count DESC LIMIT 5'); top_styles = cur.fetchall()
+    cur.execute('SELECT occasion, COUNT(id) as count FROM tasks WHERE occasion IS NOT NULL GROUP BY occasion ORDER BY count DESC LIMIT 5'); top_occasions = cur.fetchall()
+    cur.execute("SELECT country, COUNT(id) as count FROM tasks WHERE country NOT IN ('Local', 'Unknown', 'Unavailable') GROUP BY country ORDER BY count DESC LIMIT 5"); top_countries = cur.fetchall()
     
     # Recent Orders
-    recent_orders = db.execute("SELECT * FROM tasks WHERE payment_status = 'paid' ORDER BY paid_at DESC LIMIT 5").fetchall()
+    cur.execute("SELECT * FROM tasks WHERE payment_status = 'paid' ORDER BY paid_at DESC LIMIT 5"); recent_orders = cur.fetchall()
 
+    cur.close()
     db.close()
 
     kpis = {
@@ -618,7 +587,9 @@ def admin_dashboard():
 def admin_tasks():
     logger.info(f"Admin user '{request.authorization.username}' accessed the task explorer.")
     db = get_db()
-    tasks = db.execute('SELECT * FROM tasks ORDER BY created_at DESC').fetchall()
+    cur = db.cursor(cursor_factory=psycopg2.extras.DictCursor)
+    cur.execute('SELECT * FROM tasks ORDER BY created_at DESC'); tasks = cur.fetchall()
+    cur.close()
     db.close()
     return render_template('admin/tasks.html', tasks=tasks)
 

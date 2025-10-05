@@ -39,6 +39,43 @@
             margin-right: auto;
             min-height: 50px; /* Reserve space for the button */
         }
+        .player-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background-color: #f8f9fa;
+            padding: 0.75rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 1rem;
+        }
+        .play-btn {
+            background: #6b48ff;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+        .progress-bar-container {
+            flex-grow: 1;
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            width: 0;
+            height: 100%;
+            background-color: #6b48ff;
+            transition: width 0.1s linear;
+        }
+        #paypal-button-container {
+            margin-top: 1.5rem;
+            margin-left: auto;
+            margin-right: auto;
+            min-height: 50px; /* Reserve space for the button */
+        }
         footer {
             background-color: #f8f9fa;
             padding: 1rem 0;
@@ -57,8 +94,17 @@
         <div class="card p-4">
             <h1 class="mb-3">Listen to a Preview!</h1>
             {% for preview_path in task.preview_paths %}
-                <h4 class="mt-3 mb-2">Preview {{ loop.index }}</h4>
-                <audio class="preview-player" src="{{ preview_path }}" controls></audio>
+                <div class="preview-instance mt-3">
+                    <h5 class="mb-2">Preview {{ loop.index }} (30s)</h5>
+                    <div class="player-container">
+                        <button class="play-btn">▶️</button>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar-fill"></div>
+                        </div>
+                    </div>
+                    <!-- The audio element is hidden but controlled by our script -->
+                    <audio class="preview-player" src="{{ preview_path }}" preload="metadata"></audio>
+                </div>
             {% endfor %}
             <p class="mt-4">Love it? Pay to unlock and download both full, high-quality songs!</p>
             <div id="paypal-button-container"></div>
@@ -70,6 +116,45 @@
 
     <script src="https://www.paypal.com/sdk/js?client-id={{ paypal_client_id }}&currency=USD"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const previewPlayers = document.querySelectorAll('.preview-instance');
+
+            previewPlayers.forEach(playerInstance => {
+                const audio = playerInstance.querySelector('.preview-player');
+                const playBtn = playerInstance.querySelector('.play-btn');
+                const progressBar = playerInstance.querySelector('.progress-bar-fill');
+                const PREVIEW_DURATION = 30; // 30 seconds
+
+                // 1. When the user clicks the play button
+                playBtn.addEventListener('click', () => {
+                    if (audio.paused) {
+                        // Pause all other players before playing this one
+                        document.querySelectorAll('.preview-player').forEach(p => {
+                            if (p !== audio) p.pause();
+                        });
+                        audio.play();
+                    } else {
+                        audio.pause();
+                    }
+                });
+
+                // 2. Listen for time updates to enforce the 30-second limit
+                audio.addEventListener('timeupdate', () => {
+                    // 3. If the current time exceeds the preview duration, pause the audio
+                    if (audio.currentTime >= PREVIEW_DURATION) {
+                        audio.pause();
+                        audio.currentTime = 0; // Reset for next play
+                    }
+                    // Update the progress bar
+                    const progress = (audio.currentTime / PREVIEW_DURATION) * 100;
+                    progressBar.style.width = `${progress}%`;
+                });
+
+                audio.addEventListener('play', () => { playBtn.textContent = '⏸️'; });
+                audio.addEventListener('pause', () => { playBtn.textContent = '▶️'; });
+            });
+        });
+
         paypal.Buttons({
             createOrder: async () => {
                 const response = await fetch(`/create_paypal_order/{{ task.task_id }}`, { method: 'POST' });
