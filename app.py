@@ -31,40 +31,38 @@ if os.getenv('RENDER') is None:
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
 app.secret_key = os.getenv('FLASK_SECRET_KEY')
-openai = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-SUNO_API_KEY = os.getenv('SUNO_API_KEY')
-ADMIN_USERNAME = os.getenv('ADMIN_USERNAME')
-ADMIN_PASSWORD = os.getenv('ADMIN_PASSWORD')
-BASE_URL = "https://api.sunoapi.org/api/v1"  # Confirmed correct
 
-# --- PayPal Configuration ---
-PAYPAL_CLIENT_ID = os.getenv('PAYPAL_CLIENT_ID')
-PAYPAL_CLIENT_SECRET = os.getenv('PAYPAL_CLIENT_SECRET')
-SONG_PRICE = os.getenv('SONG_PRICE', '1.99') # Default to 1.99 if not set
-PAYPAL_MODE = os.getenv('PAYPAL_MODE', 'sandbox') # 'sandbox' or 'live'
+# --- Configuration Loading ---
+app.config['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
+app.config['SUNO_API_KEY'] = os.getenv('SUNO_API_KEY')
+app.config['ADMIN_USERNAME'] = os.getenv('ADMIN_USERNAME')
+app.config['ADMIN_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
+app.config['PAYPAL_CLIENT_ID'] = os.getenv('PAYPAL_CLIENT_ID')
+app.config['PAYPAL_CLIENT_SECRET'] = os.getenv('PAYPAL_CLIENT_SECRET')
+app.config['SONG_PRICE'] = os.getenv('SONG_PRICE', '1.99')
+app.config['PAYPAL_MODE'] = os.getenv('PAYPAL_MODE', 'sandbox')
+app.config['PUBLIC_URL'] = os.getenv('PUBLIC_URL')
+app.config['DATABASE_URL'] = os.getenv('DATABASE_URL')
 
-if PAYPAL_MODE == 'live':
+openai = OpenAI(api_key=app.config['OPENAI_API_KEY'])
+BASE_URL = "https://api.sunoapi.org/api/v1"
+
+if app.config['PAYPAL_MODE'] == 'live':
     PAYPAL_API_BASE_URL = "https://api-m.paypal.com"
 else:
     PAYPAL_API_BASE_URL = "https://api-m.sandbox.paypal.com"
 
-PUBLIC_URL = os.getenv('PUBLIC_URL') # For ngrok or production environment
-
 # --- Data and Database Setup for Production ---
-# The DATA_DIR concept for a persistent disk is no longer used.
-# For Render's free tier, we can't use a local SQLite DB due to the ephemeral filesystem.
-# We will use a PostgreSQL database, provided by Render or another cloud provider.
-DATABASE_URL = os.getenv('DATABASE_URL') # Render provides this automatically for its Postgres service
-
 # The local preview directory is still useful for local dev, but on Render it will be ephemeral.
 # We will generate previews on-the-fly instead of saving them long-term.
 PREVIEW_DIR = os.path.join(basedir, 'previews') # Keep previews local, they are ephemeral anyway
 
 def get_db():
-    if not DATABASE_URL:
+    db_url = app.config.get('DATABASE_URL')
+    if not db_url:
         logger.error("DATABASE_URL environment variable is not set.")
         raise ValueError("DATABASE_URL environment variable is not set. Cannot connect to the database.")
-    db = psycopg2.connect(DATABASE_URL)
+    db = psycopg2.connect(db_url)
     return db
 
 def init_db():
@@ -81,7 +79,7 @@ def init_db_command():
     init_db()
     logger.info('Initialized the database.')
 
-if not SUNO_API_KEY:
+if not app.config['SUNO_API_KEY']:
     logger.error("Suno API key is missing in .env")
     raise ValueError("Suno API key is required.")
 
@@ -89,7 +87,7 @@ if not SUNO_API_KEY:
 def check_auth(username, password):
     """This function is called to check if a username /
     password combination is valid."""
-    return username == ADMIN_USERNAME and password == ADMIN_PASSWORD
+    return username == app.config['ADMIN_USERNAME'] and password == app.config['ADMIN_PASSWORD']
 
 def authenticate():
     """Sends a 401 response that enables basic auth"""
@@ -115,8 +113,8 @@ class SunoGenerator:
         logger.info(f"Generating song titled '{title}' with style '{style}'")
         url = f"{BASE_URL}/generate"
         # Determine the callback URL. Prioritize PUBLIC_URL for ngrok/production.
-        if PUBLIC_URL:
-            callback_base = PUBLIC_URL
+        if app.config['PUBLIC_URL']:
+            callback_base = app.config['PUBLIC_URL']
         else:
             # Fallback to request context if PUBLIC_URL is not set (for local dev without callbacks)
             callback_base = request.url_root.rstrip('/')
@@ -233,7 +231,7 @@ def generate_song():
     referrer = request.headers.get('Referer')
 
     try:
-        generator = SunoGenerator(api_key=SUNO_API_KEY)
+        generator = SunoGenerator(api_key=app.config['SUNO_API_KEY'])
         task_id = generator.generate_song(
             prompt=f"Happy {occasion} to {name}! {lyrics}",
             style=style,
@@ -357,7 +355,7 @@ def song_preview(task_id):
     task_dict = dict(task)
     task_dict['preview_paths'] = audio_links # We'll reuse the 'preview_paths' variable name in the template
 
-    return render_template('song_preview.html', task=task_dict, paypal_client_id=PAYPAL_CLIENT_ID)
+    return render_template('song_preview.html', task=task_dict, paypal_client_id=app.config['PAYPAL_CLIENT_ID'])
 
 @app.route('/create_paypal_order/<task_id>', methods=['POST'])
 def create_paypal_order(task_id):
@@ -386,7 +384,7 @@ def create_paypal_order(task_id):
         "purchase_units": [{
             "amount": {
                 "currency_code": "USD",
-                "value": SONG_PRICE
+                "value": app.config['SONG_PRICE']
             },
             "description": f"Personalized Song: {task['name']}'s {task['occasion']}",
             "custom_id": task_id # Link the PayPal order to your task_id
@@ -455,7 +453,7 @@ def capture_paypal_order(order_id):
 
 def get_paypal_access_token():
     """Helper function to get a PayPal access token."""
-    auth = (PAYPAL_CLIENT_ID, PAYPAL_CLIENT_SECRET)
+    auth = (app.config['PAYPAL_CLIENT_ID'], app.config['PAYPAL_CLIENT_SECRET'])
     url = f"{PAYPAL_API_BASE_URL}/v1/oauth2/token"
     headers = {"Accept": "application/json", "Accept-Language": "en_US"}
     data = {"grant_type": "client_credentials"}
@@ -551,11 +549,11 @@ def admin_dashboard():
     # Order/Revenue KPIs
     cur.execute("SELECT COUNT(id) FROM tasks WHERE payment_status = 'paid'"); total_paid_orders = cur.fetchone()[0]
     try:
-        song_price_float = float(SONG_PRICE)
+        song_price_float = float(app.config['SONG_PRICE'])
         total_revenue = total_paid_orders * song_price_float
     except (ValueError, TypeError):
         total_revenue = 0.0
-        logger.error(f"Could not parse SONG_PRICE '{SONG_PRICE}' to a float.")
+        logger.error(f"Could not parse SONG_PRICE '{app.config['SONG_PRICE']}' to a float.")
         
     # Conversion Rate
     conversion_rate = (total_paid_orders / total_tasks * 100) if total_tasks > 0 else 0
