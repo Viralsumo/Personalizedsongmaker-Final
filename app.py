@@ -67,11 +67,19 @@ def get_db():
 
 def init_db():
     with app.app_context():
-        db = get_db()
-        with open('schema.sql', 'r') as f:
+        db = None
+        cur = None
+        try:
+            db = get_db()
             cur = db.cursor()
-            cur.execute(f.read())
-        db.commit()
+            with open('schema.sql', 'r') as f:
+                cur.execute(f.read())
+            db.commit()
+        finally:
+            if cur:
+                cur.close()
+            if db:
+                db.close()
 
 @app.cli.command('init-db')
 def init_db_command():
