@@ -105,7 +105,8 @@ def init_db():
                 paid_at TIMESTAMP
                 shareable_id TEXT UNIQUE,
                 recipient_message TEXT,
-                is_shared BOOLEAN DEFAULT false
+                is_shared BOOLEAN DEFAULT false,
+                share_page_views INT DEFAULT 0
             );
         """)
         logger.info("DB initialized: 'tasks' table ensured.")
@@ -605,6 +606,13 @@ def show_shareable_page(shareable_id):
     cur.execute("SELECT * FROM tasks WHERE shareable_id = %s", (shareable_id,))
     task = cur.fetchone()
     cur.close()
+
+    # Increment the view count for this shareable page
+    if task:
+        cur = db.cursor()
+        cur.execute("UPDATE tasks SET share_page_views = share_page_views + 1 WHERE shareable_id = %s", (shareable_id,))
+        db.commit()
+        cur.close()
     db.close()
 
     if not task:
@@ -652,6 +660,11 @@ def admin_dashboard():
     cur.execute('SELECT style, COUNT(id) as count FROM tasks WHERE style IS NOT NULL GROUP BY style ORDER BY count DESC LIMIT 5'); top_styles = cur.fetchall()
     cur.execute('SELECT occasion, COUNT(id) as count FROM tasks WHERE occasion IS NOT NULL GROUP BY occasion ORDER BY count DESC LIMIT 5'); top_occasions = cur.fetchall()
     cur.execute("SELECT country, COUNT(id) as count FROM tasks WHERE country NOT IN ('Local', 'Unknown', 'Unavailable') GROUP BY country ORDER BY count DESC LIMIT 5"); top_countries = cur.fetchall()
+
+    # New Share Analytics
+    cur.execute("SELECT COUNT(id) FROM tasks WHERE is_shared = true"); shared_pages_created = cur.fetchone()[0]
+    cur.execute("SELECT COALESCE(SUM(share_page_views), 0) FROM tasks"); total_share_views = cur.fetchone()[0]
+    cur.execute("SELECT name, occasion, share_page_views, shareable_id FROM tasks WHERE is_shared = true ORDER BY share_page_views DESC LIMIT 5"); top_shared_songs = cur.fetchall()
     
     # Recent Orders
     cur.execute("SELECT * FROM tasks WHERE payment_status = 'paid' ORDER BY paid_at DESC LIMIT 5"); recent_orders = cur.fetchall()
@@ -668,7 +681,10 @@ def admin_dashboard():
         'conversion_rate': f"{conversion_rate:.2f}",
         'top_styles': top_styles,
         'top_occasions': top_occasions,
-        'top_countries': top_countries
+        'top_countries': top_countries,
+        'shared_pages_created': shared_pages_created,
+        'total_share_views': total_share_views,
+        'top_shared_songs': top_shared_songs
     }
     return render_template('admin/dashboard.html', kpis=kpis, recent_orders=recent_orders)
 

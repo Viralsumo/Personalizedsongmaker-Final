@@ -97,6 +97,22 @@
                     </div>
                 </div>
             </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card text-white bg-dark h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Gift Pages Created</h5>
+                        <p class="card-text fs-2 fw-bold">{{ kpis.shared_pages_created }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card text-white bg-purple h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Gift Page Views</h5>
+                        <p class="card-text fs-2 fw-bold">{{ kpis.total_share_views }}</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Recent Orders & Top Lists -->
@@ -131,6 +147,35 @@
                                     </tr>
                                     {% endfor %}
                                 </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Top 5 Most Viewed Gift Pages</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Song For</th>
+                        <th>Occasion</th>
+                        <th>Views</th>
+                        <th>Link</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for song in kpis.top_shared_songs %}
+                    <tr>
+                        <td>{{ song.name }}</td>
+                        <td>{{ song.occasion }}</td>
+                        <td><span class="badge bg-dark">{{ song.share_page_views }}</span></td>
+                        <td><a href="{{ url_for('show_shareable_page', shareable_id=song.shareable_id) }}" target="_blank">View Page</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
                             </table>
                         </div>
                     </div>
