@@ -61,15 +61,13 @@ export default function SongPreviewPage() {
         // If still pending, poll again after a delay
         setTimeout(pollTaskStatus, 5000);
 
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred.');
         setStatus('error');
       }
     };
 
     pollTaskStatus();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskId, router, apiUrl]);
 
   // Effect to initialize player states when songLinks are available
@@ -88,13 +86,13 @@ export default function SongPreviewPage() {
       } else {
         throw new Error(orderData.error || 'Could not create PayPal order.');
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
       throw err;
     }
   };
 
-  const onApprove = async (data: any) => {
+  const onApprove = async (data: { orderID: string }) => {
     try {
       const response = await fetch(`${apiUrl}/capture_paypal_order/${data.orderID}`, { method: 'POST' });
       const captureData = await response.json();
@@ -104,8 +102,8 @@ export default function SongPreviewPage() {
       } else {
         throw new Error(captureData.error || 'Payment capture failed.');
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     }
   };
 

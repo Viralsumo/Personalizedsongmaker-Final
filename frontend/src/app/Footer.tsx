@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Logo from './Logo';
 
 export default function Footer() {
   const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,9 +14,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1">
           <div className="font-logo text-3xl font-bold text-white">Personalized Song Maker</div>
-          <p className="mt-2 text-sm">
-            The voice of your heart, in a song.
-          </p>
+          <p className="mt-2 text-sm">The voice of your heart, in a song.</p>
         </div>
         <div className="md:col-span-3 flex flex-col sm:flex-row justify-between gap-8">
           <div>

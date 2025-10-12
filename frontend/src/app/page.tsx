@@ -242,11 +242,11 @@ const CreateSongFormSection = () => {
             </div>
             <div>
               <label htmlFor="to_person" className="block text-sm font-bold leading-6 text-slate-800">To (Recipient's Name)</label>
-              <input type="text" name="to_person" id="to_person" value={formData.to_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" required />
+              <input type="text" name="to_person" id="to_person" value={formData.to_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Pradnya" required />
             </div>
             <div>
               <label htmlFor="from_person" className="block text-sm font-bold leading-6 text-slate-800">From (Your Name)</label>
-              <input type="text" name="from_person" id="from_person" value={formData.from_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" required />
+              <input type="text" name="from_person" id="from_person" value={formData.from_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Sanket" required />
             </div>
           </div>
           <div>
@@ -322,7 +322,7 @@ const HowItWorksSection = () => (
           />
           <Feature
             title="3. Preview Your Song"
-            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
+            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It&apos;s magic, and completely risk-free."
             icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
@@ -426,7 +426,7 @@ const TestimonialsSection = () => {
     <section className="py-12 sm:py-16 bg-pink-50/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Don't Just Take Our Word For It</h2>        
+        <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Don&apos;t Just Take Our Word For It</h2>        
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <ChatBubbleLeftRightIcon className="h-8 w-8 text-fuchsia-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -440,10 +440,10 @@ const TestimonialsSection = () => {
             { name: 'Aanya K.', location: 'Bengaluru, India', quote: 'They turned our story into a song that made my partner cry happy tears. The most perfect and personal gift I’ve ever given.', color: 'coral' },
             { name: 'Liam O.', location: 'Dublin, Ireland', quote: 'Brilliant service. I was skeptical about the speed, but the quality is genuinely fantastic. A really unique gift for my brother.', color: 'teal' },
             { name: 'Maria G.', location: 'São Paulo, Brazil', quote: 'What a unique gift idea! The song was both funny and sweet, just like I asked. It captured our relationship perfectly. Thank you!', color: 'gold' },
-            { name: 'Chloe L.', location: 'Toronto, Canada', quote: 'I was blown away by the quality for the price. The lyrics were so thoughtful. It\'s a memory we\'ll have forever.', color: 'teal' },
-            { name: 'Kenji T.', location: 'Tokyo, Japan', quote: 'I used this for my girlfriend\'s birthday. The song was so personal and touching. She loved it! The process was simple and the result was professional.', color: 'gold' },
+            { name: 'Chloe L.', location: 'Toronto, Canada', quote: 'I was blown away by the quality for the price. The lyrics were so thoughtful. It&apos;s a memory we&apos;ll have forever.', color: 'teal' },
+            { name: 'Kenji T.', location: 'Tokyo, Japan', quote: 'I used this for my girlfriend&apos;s birthday. The song was so personal and touching. She loved it! The process was simple and the result was professional.', color: 'gold' },
             { name: 'Fatima A.', location: 'Dubai, UAE', quote: 'The perfect way to say \'I love you\'. I got a song for my husband and he was speechless. It was so easy to do from my phone.', color: 'coral' },
-            { name: 'Emily S.', location: 'Sydney, Australia', quote: 'Absolutely incredible! I gave them a few details for my parents\' anniversary and they created a masterpiece. The turnaround was so fast!', color: 'gold' },
+            { name: 'Emily S.', location: 'Sydney, Australia', quote: 'Absolutely incredible! I gave them a few details for my parents&apos; anniversary and they created a masterpiece. The turnaround was so fast!', color: 'gold' },
             { name: 'David C.', location: 'Cape Town, SA', quote: 'Used this for a friend’s farewell. The song was a hit! It was emotional, funny, and perfectly captured our friendship. 10/10.', color: 'coral' },
             { name: 'Isabella M.', location: 'Rome, Italy', quote: 'A truly special service. The melody was beautiful and the lyrics felt like they came straight from my heart. My nonna adored it.', color: 'teal' },
             { name: 'Vikram R.', location: 'Pune, India', quote: 'I was blown away by the quality. It sounded like a real radio hit, but the lyrics were all about us. Fast, emotional, and beautifully produced.', color: 'coral' },
@@ -474,7 +474,7 @@ const TestimonialsSection = () => {
 const FaqSection = () => {
   const faqs = [
     { q: 'How long does it take to get my songs?', a: 'Amazingly fast! After you approve the lyrics, your two song versions are generated and delivered in under 5 minutes.' },
-    { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly or download as a PDF, perfect for sharing.' },
+    { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' },
     { q: 'What if I don\'t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
     { q: 'Can I get a refund or a redo after I purchase?', a: 'Once you have paid and received the full-length songs, we cannot offer a redo or a refund. We provide the preview so you can be 100% sure you love it before you buy.' },
   ];

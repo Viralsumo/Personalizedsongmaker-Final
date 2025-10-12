@@ -61,8 +61,8 @@ export default function SongDownloadPage() {
           // If not paid, redirect back to preview page
           router.push(`/song-preview/${taskId}`);
         }
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred.');
       } finally {
         setIsLoading(false);
       }
@@ -90,7 +90,7 @@ export default function SongDownloadPage() {
       a.click();
       window.URL.revokeObjectURL(downloadUrl);
       a.remove();
-    } catch (err) {
+    } catch (_err) {
       setError('Failed to download the song. Please try again.');
     } finally {
       setDownloading(null);
@@ -126,8 +126,8 @@ export default function SongDownloadPage() {
       // Construct the full frontend URL
       const frontendUrl = `${window.location.origin}/share/${data.shareable_id}`;
       setShareUrl(frontendUrl);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsSharing(false);
     }
@@ -199,7 +199,7 @@ export default function SongDownloadPage() {
           <div className="text-center">
             <GiftIcon className="h-12 w-12 text-fuchsia-500 mx-auto" />
             <h3 className="mt-4 text-2xl font-bold text-slate-800">Share as a Special Gift! 🎁</h3>
-            <p className="mt-2 text-slate-600">Create a private, shareable webpage for {getRecipientName()} with a personal message. It's free with your purchase!</p>
+            <p className="mt-2 text-slate-600">Create a private, shareable webpage for {getRecipientName()} with a personal message. It&apos;s free with your purchase!</p>
           </div>
 
           {shareUrl ? (
@@ -219,7 +219,7 @@ export default function SongDownloadPage() {
               {/* Social Share Prompt */}
               <div className="mt-6 pt-6 border-t border-fuchsia-200">
                 <h4 className="font-semibold text-slate-800">Share your masterpiece!</h4>
-                <p className="text-sm text-slate-600 mt-1">Let your friends see the unique and heartfelt gift you've created, Tag Them All!.</p>
+                <p className="text-sm text-slate-600 mt-1">Let your friends see the unique and heartfelt gift you&apos;ve created, Tag Them All!.</p>
                 <div className="mt-4 flex justify-center items-center gap-4">
                     <a
                         href={`https://twitter.com/intent/tweet?text=I%20just%20created%20a%20personalized%20song%20for%20someone%20special!%20Check%20out%20the%20beautiful%20gift%20page%20I%20made.&url=${encodeURIComponent(shareUrl)}`}

@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { GiftIcon, MusicalNoteIcon } from '@heroicons/react/24/solid';
 
 interface ShareData {
@@ -74,9 +75,9 @@ export default function SharePage() {
       <div className="min-h-screen flex flex-col items-center justify-center bg-red-50 text-red-700 p-4 text-center">
         <h2 className="text-2xl font-bold">Oops!</h2>
         <p className="mt-2">{error}</p>
-        <a href="/" className="mt-6 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold">
+        <Link href="/" className="mt-6 px-4 py-2 bg-red-600 text-white rounded-lg font-semibold">
           Back to Homepage
-        </a>
+        </Link>
       </div>
     );
   }
@@ -163,9 +164,9 @@ export default function SharePage() {
           </div>
           <div className="bg-fuchsia-600 p-4 text-center text-sm text-white/80">
             This song was created at{' '}
-            <a href="/" className="font-semibold text-white hover:underline">
+            <Link href="/" className="font-semibold text-white hover:underline">
               PersonalizedSongMaker.com
-            </a>
+            </Link>
           </div>
         </div>
       </main>
