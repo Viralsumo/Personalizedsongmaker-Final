@@ -224,9 +224,9 @@ const CreateSongFormSection = () => {
                 <option>Birthday</option>
                 <option>Anniversary</option>
                 <option>Wedding</option>
-                <option>Valentine's Day</option>
-                <option>Mother's Day</option>
-                <option>Father's Day</option>
+                <option>Valentine&apos;s Day</option>
+                <option>Mother&apos;s Day</option>
+                <option>Father&apos;s Day</option>
                 <option>Just Because</option>
               </select>
             </div>
@@ -345,7 +345,7 @@ const SamplesSection = () => (
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <MusicalNoteIcon className="h-8 w-8 text-fuchsia-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Listen to What We've Created
+            Listen to What We&apos;ve Created
           </p>
         </div>
         <p className="mt-6 text-lg leading-8 text-slate-700">
@@ -442,12 +442,12 @@ const TestimonialsSection = () => {
             { name: 'Maria G.', location: 'São Paulo, Brazil', quote: 'What a unique gift idea! The song was both funny and sweet, just like I asked. It captured our relationship perfectly. Thank you!', color: 'gold' }, 
             { name: 'Chloe L.', location: 'Toronto, Canada', quote: 'I was blown away by the quality for the price. The lyrics were so thoughtful. It&apos;s a memory we&apos;ll have forever.', color: 'teal' },
             { name: 'Kenji T.', location: 'Tokyo, Japan', quote: 'I used this for my girlfriend&apos;s birthday. The song was so personal and touching. She loved it! The process was simple and the result was professional.', color: 'gold' },
-            { name: 'Fatima A.', location: 'Dubai, UAE', quote: "The perfect way to say 'I love you'. I got a song for my husband and he was speechless. It was so easy to do from my phone.", color: 'coral' },
+            { name: 'Fatima A.', location: 'Dubai, UAE', quote: "The perfect way to say &apos;I love you&apos;. I got a song for my husband and he was speechless. It was so easy to do from my phone.", color: 'coral' },
             { name: 'Emily S.', location: 'Sydney, Australia', quote: 'Absolutely incredible! I gave them a few details for my parents&apos; anniversary and they created a masterpiece. The turnaround was so fast!', color: 'gold' },
             { name: 'David C.', location: 'Cape Town, SA', quote: 'Used this for a friend’s farewell. The song was a hit! It was emotional, funny, and perfectly captured our friendship. 10/10.', color: 'coral' },
             { name: 'Isabella M.', location: 'Rome, Italy', quote: 'A truly special service. The melody was beautiful and the lyrics felt like they came straight from my heart. My nonna adored it.', color: 'teal' },
             { name: 'Vikram R.', location: 'Pune, India', quote: 'I was blown away by the quality. It sounded like a real radio hit, but the lyrics were all about us. Fast, emotional, and beautifully produced.', color: 'coral' },
-            { name: 'John M.', location: 'London, UK', quote: 'The melody fit our story so well—it brought tears to everyone\'s eyes at the wedding. Worth every penny. An absolute treasure.', color: 'gold' },
+            { name: 'John M.', location: 'London, UK', quote: 'The melody fit our story so well—it brought tears to everyone&apos;s eyes at the wedding. Worth every penny. An absolute treasure.', color: 'gold' },
             { name: 'Sophie B.', location: 'Paris, France', quote: 'I am not a creative person, so this was perfect. The song for my sister\'s graduation was better than I could have imagined. So simple!', color: 'teal' },
           ].map((testimonial) => (
             <div key={testimonial.name} className="p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
@@ -474,7 +474,7 @@ const TestimonialsSection = () => {
 const FaqSection = () => {
   const faqs = [
     { q: 'How long does it take to get my songs?', a: 'Amazingly fast! After you approve the lyrics, your two song versions are generated and delivered in under 5 minutes.' },
-    { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' },
+    { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' }, 
     { q: 'What if I don&apos;t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
     { q: 'Can I get a refund or a redo after I purchase?', a: 'Once you have paid and received the full-length songs, we cannot offer a redo or a refund. We provide the preview so you can be 100% sure you love it before you buy.' },
   ];

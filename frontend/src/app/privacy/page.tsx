@@ -14,7 +14,7 @@ const PrivacyPage = () => {
           <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p>
           <ul className="list-disc list-inside space-y-2">
             <li><strong>Personal Data:</strong> While using our Service, we may ask you to provide us with certain personally identifiable information. This includes the details you provide in the song creation form (e.g., name, occasion, details) and your email address if you choose to receive a backup.</li>
-            <li><strong>Usage Data:</strong> We automatically collect information such as your computer's Internet Protocol (IP) address, browser type, browser version, the pages of our Service that you visit, and other diagnostic data.</li>
+            <li><strong>Usage Data:</strong> We automatically collect information such as your computer&apos;s Internet Protocol (IP) address, browser type, browser version, the pages of our Service that you visit, and other diagnostic data.</li>
             <li><strong>Payment Data:</strong> All payments are processed by PayPal. We do not store your credit card details. We receive a confirmation of payment and your PayPal Order ID to associate the payment with your song task.</li>
           </ul>
 
