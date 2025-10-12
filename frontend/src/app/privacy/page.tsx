@@ -8,7 +8,7 @@ const PrivacyPage = () => {
         <p className="text-gray-500 mt-2">Last updated: October 03, 2025</p>
 
         <div className="prose lg:prose-lg mt-8 max-w-none text-slate-700">
-          <p>Personalized Song Maker ("us", "we", or "our") operates the Personalized Song Maker website (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.</p>
+          <p>Personalized Song Maker (&quot;us&quot;, &quot;we&quot;, or &quot;our&quot;) operates the Personalized Song Maker website (the &quot;Service&quot;). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service.</p>
 
           <h4 className="font-semibold text-lg mt-6 mb-2">1. Information Collection and Use</h4>
           <p>We collect several different types of information for various purposes to provide and improve our Service to you.</p>

@@ -130,7 +130,7 @@ const HeroSection = () => {
                 <source src="/samples/sample1.mp3" type="audio/mpeg" />
               </audio>
               <div className="text-sm">
-                <div className="font-medium text-slate-900">Now Playing: "Our Adventure"</div>
+                <div className="font-medium text-slate-900">Now Playing: &quot;Our Adventure&quot;</div>
               <div className="text-slate-600">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </div>
