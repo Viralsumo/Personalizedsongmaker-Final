@@ -26,7 +26,10 @@ export default function SharePage() {
 
     const fetchShareData = async () => {
       try {
-        const response = await fetch(`${apiUrl}/api/share_data/${shareId}`);
+        const response = await fetch(`${apiUrl}/api/share_data/${shareId}`, {
+          // Ensure fresh data is fetched on each request.
+          cache: 'no-store',
+        });
         const result = await response.json();
 
         if (!response.ok) {
@@ -173,5 +176,3 @@ export default function SharePage() {
     </div>
   );
 }
-
-export const dynamic = 'force-dynamic';

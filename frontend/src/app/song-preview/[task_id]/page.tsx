@@ -5,7 +5,12 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
 import { COLORS } from '../../constants';
-import { PayPalScriptProvider, PayPalButtons } from '@paypal/react-paypal-js';
+import {
+  PayPalScriptProvider,
+  PayPalButtons,
+  type OnApproveData,
+  type OnApproveActions,
+} from '@paypal/react-paypal-js';
 
 export default function SongPreviewPage() {
   const params = useParams();
@@ -77,22 +82,20 @@ export default function SongPreviewPage() {
     }
   }, [songLinks]);
 
-  const createOrder = async () => {
-    try {
-      const response = await fetch(`${apiUrl}/create_paypal_order/${taskId}`, { method: 'POST' });
-      const orderData = await response.json();
-      if (orderData.orderID) {
-        return orderData.orderID;
-      } else {
-        throw new Error(orderData.error || 'Could not create PayPal order.');
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-      throw err;
+  const createOrder = async (): Promise<string> => {
+    const response = await fetch(`${apiUrl}/create_paypal_order/${taskId}`, {
+      method: 'POST',
+    });
+    const orderData = await response.json();
+    if (orderData.orderID) {
+      return orderData.orderID;
     }
+    const errorMessage = orderData.error || 'Could not create PayPal order.';
+    setError(errorMessage);
+    throw new Error(errorMessage);
   };
 
-  const onApprove = async (data: { orderID: string }) => {
+  const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
     try {
       const response = await fetch(`${apiUrl}/capture_paypal_order/${data.orderID}`, { method: 'POST' });
       const captureData = await response.json();
