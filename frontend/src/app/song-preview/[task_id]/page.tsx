@@ -214,7 +214,7 @@ export default function SongPreviewPage() {
                 <div key={index}>
                   <h3 className="text-xl font-bold text-slate-800">Preview {index + 1} (30s)</h3>
                   {/* Hidden audio element for control */}
-                  <audio ref={el => audioRefs.current[index] = el} src={songUrl || ''} preload="metadata" onPause={() => setPlayingIndex(null)} onPlay={() => setPlayingIndex(index)}></audio>
+                  <audio ref={(el) => { audioRefs.current[index] = el; }} src={songUrl || ''} preload="metadata" onPause={() => setPlayingIndex(null)} onPlay={() => setPlayingIndex(index)}></audio>
                   {songUrl ? (
                     <div className="mt-2 flex items-center gap-3 bg-slate-50 p-2 rounded-lg">
                        <button onClick={() => togglePlay(index)} className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full text-white transition-colors bg-pink-500 hover:bg-pink-600">
