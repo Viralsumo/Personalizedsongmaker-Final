@@ -23,7 +23,7 @@ export default function Footer() {
               <li><a href="/occasion/birthday" className="hover:text-white">Birthday</a></li>
               <li><a href="/occasion/anniversary" className="hover:text-white">Anniversary</a></li>
               <li><a href="/occasion/wedding" className="hover:text-white">Wedding</a></li>
-              <li><a href="/occasion/valentines" className="hover:text-white">Valentine's Day</a></li>
+              <li><a href="/occasion/valentines" className="hover:text-white">Valentine&apos;s Day</a></li>
             </ul>
           </div>
           <div>

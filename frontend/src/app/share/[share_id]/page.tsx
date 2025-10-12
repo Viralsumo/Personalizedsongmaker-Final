@@ -34,13 +34,13 @@ export default function SharePage() {
         }
 
         // Construct the full streaming URLs using the task_id from the response
-        const streamLinks = result.audio_links.map((_: any, i: number) => 
+        const streamLinks = result.audio_links.map((_: unknown, i: number) => 
           `${apiUrl}/stream/${result.task_id}/${i}`
         );
 
         setData({ ...result, audio_links: streamLinks });
-      } catch (err: any) {
-        setError(err.message);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An unknown error occurred.');
       } finally {
         setIsLoading(false);
       }

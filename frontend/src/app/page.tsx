@@ -81,7 +81,7 @@ const HeroSection = () => {
             </h1>
           </div>
           <p className="mt-6 text-lg leading-8 text-slate-700">
-            Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say 'I love you'.
+            Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say &apos;I love you&apos;.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
             <a
@@ -131,7 +131,7 @@ const HeroSection = () => {
               </audio>
               <div className="text-sm">
                 <div className="font-medium text-slate-900">Now Playing: "Our Adventure"</div>
-                <div className="text-slate-600">
+              <div className="text-slate-600">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </div>
               </div>
@@ -193,8 +193,8 @@ const CreateSongFormSection = () => {
 
       router.push('/lyrics-preview');
 
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
     }
@@ -241,7 +241,7 @@ const CreateSongFormSection = () => {
               </select>
             </div>
             <div>
-              <label htmlFor="to_person" className="block text-sm font-bold leading-6 text-slate-800">To (Recipient's Name)</label>
+              <label htmlFor="to_person" className="block text-sm font-bold leading-6 text-slate-800">To (Recipient&apos;s Name)</label>
               <input type="text" name="to_person" id="to_person" value={formData.to_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Pradnya" required />
             </div>
             <div>
@@ -475,7 +475,7 @@ const FaqSection = () => {
   const faqs = [
     { q: 'How long does it take to get my songs?', a: 'Amazingly fast! After you approve the lyrics, your two song versions are generated and delivered in under 5 minutes.' },
     { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' },
-    { q: 'What if I don\'t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
+    { q: 'What if I don&apos;t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
     { q: 'Can I get a refund or a redo after I purchase?', a: 'Once you have paid and received the full-length songs, we cannot offer a redo or a refund. We provide the preview so you can be 100% sure you love it before you buy.' },
   ];
 

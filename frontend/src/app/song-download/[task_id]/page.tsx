@@ -90,7 +90,7 @@ export default function SongDownloadPage() {
       a.click();
       window.URL.revokeObjectURL(downloadUrl);
       a.remove();
-    } catch (_err) {
+    } catch {
       setError('Failed to download the song. Please try again.');
     } finally {
       setDownloading(null);

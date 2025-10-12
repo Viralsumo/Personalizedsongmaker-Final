@@ -5,10 +5,18 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { COLORS } from '../constants';
 
+interface SongData {
+  name: string;
+  occasion: string;
+  details: string;
+  style: string;
+  lyrics: string;
+}
+
 export default function LyricsPreview() {
   const router = useRouter();
   const [lyrics, setLyrics] = useState('');
-  const [songData, setSongData] = useState<any>(null);
+  const [songData, setSongData] = useState<SongData | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,8 +52,8 @@ export default function LyricsPreview() {
       const { task_id } = data;
       router.push(`/song-preview/${task_id}`);
 
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
     } finally {
       setIsLoading(false);
     }
@@ -63,7 +71,7 @@ export default function LyricsPreview() {
     <div className="bg-white py-12">
       <main className="max-w-3xl mx-auto px-6 py-12 text-center">
         <h2 className="text-4xl font-extrabold" style={{ color: COLORS.dark }}>Your Custom Lyrics Are Ready!</h2>
-        <p className="mt-4 text-lg text-slate-600">Review the lyrics below. When you're ready, we'll compose the music.</p>
+        <p className="mt-4 text-lg text-slate-600">Review the lyrics below. When you&apos;re ready, we&apos;ll compose the music.</p>
 
         <div className="mt-10 bg-white rounded-2xl shadow-lg p-8 text-left">
           <pre className="bg-slate-50 p-6 rounded-lg whitespace-pre-wrap font-sans text-slate-700 text-base leading-relaxed">
