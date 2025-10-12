@@ -322,7 +322,7 @@ const HowItWorksSection = () => (
           />
           <Feature
             title="3. Preview Your Song"
-            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
+            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It&apos;s magic, and completely risk-free."
             icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
