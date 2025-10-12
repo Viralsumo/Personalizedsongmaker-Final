@@ -25,7 +25,7 @@ const TermsPage = () => {
           <p>You retain ownership of the original prompts you submit. Upon purchase, you are granted a perpetual, worldwide, non-exclusive, royalty-free license to use the generated audio files for personal, non-commercial purposes. You may not resell, sublicense, or otherwise commercially exploit the generated songs without our express written permission.</p>
 
           <h4 className="font-semibold text-lg mt-6 mb-2">5. Disclaimer of Warranties</h4>
-          <p>The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. We make no warranties, express or implied, that the Service will be uninterrupted, error-free, or that the generated content will meet your expectations.</p>
+          <p>The Service is provided on an &quot;AS IS&quot; and &quot;AS AVAILABLE&quot; basis. We make no warranties, express or implied, that the Service will be uninterrupted, error-free, or that the generated content will meet your expectations.</p> 
 
           <h4 className="font-semibold text-lg mt-6 mb-2">6. Limitation of Liability</h4>
           <p>In no event shall Personalized Song Maker, nor its directors, employees, partners, agents, suppliers, or affiliates, be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the Service.</p>

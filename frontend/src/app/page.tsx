@@ -95,7 +95,7 @@ const HeroSection = () => {
             </a>
           </div>
           <div className="mt-8 text-sm text-slate-600">
-            <p>
+            <p className="flex items-center gap-x-1.5">
               <span className="font-bold text-slate-800">★ 4.9/5 stars</span> from beta testers and real customers all over the world.
             </p>
             <div className="mt-4 flex items-center gap-x-6 text-slate-700">
@@ -322,7 +322,7 @@ const HowItWorksSection = () => (
           />
           <Feature
             title="3. Preview Your Song"
-            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It&apos;s magic, and completely risk-free."
+            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
             icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
@@ -427,7 +427,7 @@ const TestimonialsSection = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
         <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Don&apos;t Just Take Our Word For It</h2>        
-        <div className="mt-2 flex items-center justify-center gap-x-3">
+        <div className="mt-2 flex items-center justify-center gap-x-3"> 
           <ChatBubbleLeftRightIcon className="h-8 w-8 text-fuchsia-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Real Stories, Real Emotions
@@ -439,10 +439,10 @@ const TestimonialsSection = () => {
           {[
             { name: 'Aanya K.', location: 'Bengaluru, India', quote: 'They turned our story into a song that made my partner cry happy tears. The most perfect and personal gift I’ve ever given.', color: 'coral' },
             { name: 'Liam O.', location: 'Dublin, Ireland', quote: 'Brilliant service. I was skeptical about the speed, but the quality is genuinely fantastic. A really unique gift for my brother.', color: 'teal' },
-            { name: 'Maria G.', location: 'São Paulo, Brazil', quote: 'What a unique gift idea! The song was both funny and sweet, just like I asked. It captured our relationship perfectly. Thank you!', color: 'gold' },
+            { name: 'Maria G.', location: 'São Paulo, Brazil', quote: 'What a unique gift idea! The song was both funny and sweet, just like I asked. It captured our relationship perfectly. Thank you!', color: 'gold' }, 
             { name: 'Chloe L.', location: 'Toronto, Canada', quote: 'I was blown away by the quality for the price. The lyrics were so thoughtful. It&apos;s a memory we&apos;ll have forever.', color: 'teal' },
             { name: 'Kenji T.', location: 'Tokyo, Japan', quote: 'I used this for my girlfriend&apos;s birthday. The song was so personal and touching. She loved it! The process was simple and the result was professional.', color: 'gold' },
-            { name: 'Fatima A.', location: 'Dubai, UAE', quote: 'The perfect way to say \'I love you\'. I got a song for my husband and he was speechless. It was so easy to do from my phone.', color: 'coral' },
+            { name: 'Fatima A.', location: 'Dubai, UAE', quote: "The perfect way to say 'I love you'. I got a song for my husband and he was speechless. It was so easy to do from my phone.", color: 'coral' },
             { name: 'Emily S.', location: 'Sydney, Australia', quote: 'Absolutely incredible! I gave them a few details for my parents&apos; anniversary and they created a masterpiece. The turnaround was so fast!', color: 'gold' },
             { name: 'David C.', location: 'Cape Town, SA', quote: 'Used this for a friend’s farewell. The song was a hit! It was emotional, funny, and perfectly captured our friendship. 10/10.', color: 'coral' },
             { name: 'Isabella M.', location: 'Rome, Italy', quote: 'A truly special service. The melody was beautiful and the lyrics felt like they came straight from my heart. My nonna adored it.', color: 'teal' },
