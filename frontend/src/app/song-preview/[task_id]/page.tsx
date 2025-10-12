@@ -7,9 +7,7 @@ import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
 import { COLORS } from '../../constants';
 import {
   PayPalScriptProvider,
-  PayPalButtons,
-  type OnApproveData,
-  type OnApproveActions,
+  PayPalButtons
 } from '@paypal/react-paypal-js';
 
 export default function SongPreviewPage() {
@@ -95,7 +93,7 @@ export default function SongPreviewPage() {
     throw new Error(errorMessage);
   };
 
-  const onApprove = async (data: OnApproveData, actions: OnApproveActions) => {
+  const onApprove: React.ComponentProps<typeof PayPalButtons>['onApprove'] = async (data, actions) => {
     try {
       const response = await fetch(`${apiUrl}/capture_paypal_order/${data.orderID}`, { method: 'POST' });
       const captureData = await response.json();
