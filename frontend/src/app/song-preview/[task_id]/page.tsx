@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useCallback, type JSX } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
@@ -40,6 +40,8 @@ export default function SongPreviewPage(): JSX.Element {
       return;
     }
 
+    let isMounted = true;
+
     const pollTaskStatus = async (): Promise<void> => {
       try {
         const response = await fetch(`${apiUrl}/check_task/${taskId}`);
@@ -70,17 +72,25 @@ export default function SongPreviewPage(): JSX.Element {
         }
 
         // Still pending
-        setTimeout(pollTaskStatus, 5000);
+        if (isMounted) {
+          setTimeout(pollTaskStatus, 5000);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-        setStatus('error');
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'An unknown error occurred.');
+          setStatus('error');
+        }
       }
     };
 
     void pollTaskStatus();
+
+    return () => {
+      isMounted = false;
+    };
   }, [taskId, router, apiUrl]);
 
-  useEffect(() => {
+  useEffect((): void => {
     if (songLinks && songLinks.length > 0) {
       setCurrentTimes(new Array(songLinks.length).fill(0));
     }
@@ -98,7 +108,7 @@ export default function SongPreviewPage(): JSX.Element {
     throw new Error(errorMessage);
   };
 
-  const onApprove: React.ComponentProps<typeof PayPalButtons>['onApprove'] = async (data, actions) => {
+  const onApprove: React.ComponentProps<typeof PayPalButtons>['onApprove'] = async (data) => {
     try {
       const response = await fetch(`${apiUrl}/capture_paypal_order/${data.orderID}`, { method: 'POST' });
       const captureData = await response.json();
@@ -165,18 +175,18 @@ export default function SongPreviewPage(): JSX.Element {
     };
 
     const refs = audioRefs.current.filter((a): a is HTMLAudioElement => a !== null);
-    refs.forEach((audio) => {
+    refs.forEach(audio => {
       audio.addEventListener('loadedmetadata', handleMetadata);
       audio.addEventListener('timeupdate', timeUpdateHandler);
     });
 
     return () => {
-      refs.forEach((audio) => {
+      refs.forEach(audio => {
         audio.removeEventListener('loadedmetadata', handleMetadata);
         audio.removeEventListener('timeupdate', timeUpdateHandler);
       });
     };
-  }, [playingIndex]);
+  }, [songLinks]); // Rerun when songs are loaded, not just when playing
 
   const formatTime = (time: number): string => {
     if (Number.isNaN(time)) return '0:00';
@@ -301,7 +311,7 @@ export default function SongPreviewPage(): JSX.Element {
     <div className="bg-white py-12">
       <PayPalScriptProvider
         options={{
-          'client-id': process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? '',
+          clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID ?? '',
           currency: 'USD',
         }}
       >

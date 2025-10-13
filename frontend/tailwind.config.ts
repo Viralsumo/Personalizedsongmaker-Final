@@ -4,11 +4,6 @@ const config: Config = {
   content: [
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  safelist: [
-    'bg-coral',
-    'bg-teal',
-    'bg-gold',
-  ],
   theme: {
     extend: {
       colors: {
