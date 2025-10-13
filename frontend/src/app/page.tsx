@@ -40,7 +40,6 @@ const HeroSection = () => {
         if (isFinite(audio.duration)) {
           setDuration(audio.duration);
         }
-        setDuration(audio.duration);
         setCurrentTime(audio.currentTime);
       }
       const setAudioTime = () => setCurrentTime(audio.currentTime);

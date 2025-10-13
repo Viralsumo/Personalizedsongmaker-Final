@@ -21,8 +21,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <head>
-        <title>Personalized Song Maker | Turn Your Story Into a Song</title>
+      <headtle>Personalized Song Maker | Turn Your Story Into a Song</title>
         <meta name="description" content="Create a unique, personalized song from your stories. The perfect gift for any occasion. Fast, affordable, and heartfelt." />
       </head>
       <body className="antialiased bg-white text-slate-700">
