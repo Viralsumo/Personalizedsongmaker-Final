@@ -61,7 +61,7 @@ const HeroSection = () => {
 
   return (
     <header className="relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 pt-16 pb-12 sm:pt-10 sm:pb-12 lg:flex lg:items-center lg:gap-x-10">
+      <div className="max-w-7xl mx-auto px-6 pt-8 pb-12 sm:pt-8 sm:pb-12 lg:flex lg:items-center lg:gap-x-10">
         <div className="max-w-2xl lg:mx-0 lg:flex-auto z-10">
           <div className="flex">
             <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-pink-600 ring-1 ring-pink-600/20 hover:ring-pink-600/30 bg-pink-50/80 backdrop-blur-sm">
@@ -203,9 +203,9 @@ const CreateSongFormSection = () => {
     <section id="create" className="py-12 sm:py-16">
       <div className="max-w-3xl mx-auto px-6 lg:px-8 bg-white p-8 sm:p-12 rounded-2xl shadow-lg border border-gray-200">
         <div className="text-center">
-          <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Start Here</h2>
+          <h2 className="text-base font-semibold leading-7 text-purple-600">Start Here</h2>
           <div className="mt-2 flex items-center justify-center gap-x-3">
-            <PencilSquareIcon className="h-8 w-8 text-fuchsia-600" />
+            <PencilSquareIcon className="h-8 w-8 text-purple-600" />
             <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
               Create Your Personalized Song
             </p>
@@ -296,9 +296,9 @@ const HowItWorksSection = () => (
   <section id="how" className="py-12 sm:py-16 bg-pink-50/50">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-fuchsia-600">How It Works</h2>
+        <h2 className="text-base font-semibold leading-7 text-purple-600">How It Works</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
-          <SparklesIcon className="h-8 w-8 text-fuchsia-600" />
+          <SparklesIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             From Your Story to a Hit Song in 4 Simple Steps
           </p>
@@ -367,9 +367,9 @@ const SamplesSection = () => (
   <section id="samples" className="py-12 sm:py-16 bg-white">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Our Work</h2>
+        <h2 className="text-base font-semibold leading-7 text-purple-600">Our Work</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
-          <MusicalNoteIcon className="h-8 w-8 text-fuchsia-600" />
+          <MusicalNoteIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Listen to What We&apos;ve Created
           </p>
@@ -405,7 +405,7 @@ const SamplesSection = () => (
 
 // Pricing Section Component
 const PricingSection = () => (
-  <section id="pricing" className="py-12 sm:py-16 bg-fuchsia-600">
+  <section id="pricing" className="py-12 sm:py-16 bg-gradient-to-br from-pink-500 to-purple-600">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto text-center">
         <h2 className="text-base font-semibold leading-7 text-white">Inaugural Offer</h2>
@@ -449,16 +449,16 @@ const TestimonialsSection = () => {
   // Define a map for testimonial background colors to ensure Tailwind CSS generates these classes.
   const bgColorMap: { [key: string]: string } = {
     coral: 'bg-pink-500',
-    teal: 'bg-fuchsia-500',
+    teal: 'bg-purple-500', // Changed from fuchsia to purple
     gold: 'bg-amber-500', // Assuming gold is a desired accent color for variety
   };
   return (
     <section id="testimonials" className="py-12 sm:py-16 bg-pink-50/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Don&apos;t Just Take Our Word For It</h2>        
+        <h2 className="text-base font-semibold leading-7 text-purple-600">Don&apos;t Just Take Our Word For It</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3"> 
-          <ChatBubbleLeftRightIcon className="h-8 w-8 text-fuchsia-600" />
+          <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
             Real Stories, Real Emotions
           </p>
@@ -517,9 +517,9 @@ const FaqSection = () => {
     <section id="faq" className="py-12 sm:py-16 bg-white">
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Have Questions?</h2>          
+          <h2 className="text-base font-semibold leading-7 text-purple-600">Have Questions?</h2>
           <div className="mt-2 flex items-center justify-center gap-x-3">
-            <QuestionMarkCircleIcon className="h-8 w-8 text-fuchsia-600" />
+            <QuestionMarkCircleIcon className="h-8 w-8 text-purple-600" />
             <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
               Frequently Asked Questions
             </p>

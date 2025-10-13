@@ -1,9 +1,15 @@
 'use client';
 
-import { MusicalNoteIcon } from '@heroicons/react/24/solid';
+import { MusicalNoteIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
 
 export default function Logo() {
-  return <div className="flex items-center gap-2 font-logo text-2xl font-bold text-pink-600">
-    <MusicalNoteIcon className="h-7 w-7" />
-    <span>Personalized Song Maker</span></div>;
+  return (
+    <Link href="/">
+      <div className="flex items-center gap-2 font-logo text-3xl font-bold text-pink-600">
+        <MusicalNoteIcon className="h-8 w-8" />
+        <span>Personalized Song Maker</span>
+      </div>
+    </Link>
+  );
 }
