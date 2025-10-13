@@ -310,26 +310,53 @@ const HowItWorksSection = () => (
       <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
         <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
           <Feature
-            title="1. Tell Your Story"
+            title={
+              <span className="flex items-center gap-x-2">
+                1. Tell Your Story <PencilIcon className="h-5 w-5 text-slate-500" />
+              </span>
+            }
             desc="Pour your heart out. Share the memories, the laughter, and the little details that make your story unique. This is the soul of your song."
             icon={<PencilIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
-            title="2. We Craft The Lyrics"
+            title={
+              <span className="flex items-center gap-x-2">
+                2. We Craft The Lyrics <MusicalNoteIcon className="h-5 w-5 text-slate-500" />
+              </span>
+            }
             desc="Our creative AI instantly weaves your story into beautiful lyrics. You get to review and approve every word before we create the music."
             icon={<MusicalNoteIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
-            title="3. Preview Your Song"
+            title={
+              <span className="flex items-center gap-x-2">
+                3. Preview Your Song <SparklesIcon className="h-5 w-5 text-slate-500" />
+              </span>
+            }
             desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It&apos;s magic, and completely risk-free."
             icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
           />
           <Feature
-            title="4. Pay & Receive"
+            title={
+              <span className="flex items-center gap-x-2">
+                4. Pay & Receive <CurrencyDollarIcon className="h-5 w-5 text-slate-500" />
+              </span>
+            }
             desc="Love it? For just $1.99, unlock both full-length songs. Download them instantly or send them as a beautiful, shareable gift page."
             icon={<CurrencyDollarIcon className="h-8 w-8 text-white" />}
           />
         </dl>
+      </div>
+      <div className="mt-16 flex justify-center items-center gap-x-6">
+        <a
+          href="#create"
+          className="rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
+        >
+          Start Creating Now
+        </a>
+        <a href="#samples" className="text-base font-semibold leading-7 text-slate-900">
+          Preview Now <span aria-hidden="true">→</span>
+        </a>
       </div>
     </div>
   </section>
@@ -392,19 +419,23 @@ const PricingSection = () => (
           For a limited time, get one set of custom lyrics transformed into two complete songs with different musical styles.
         </p>
       </div>
-      <div className="mt-16 max-w-lg mx-auto bg-white rounded-3xl p-8 shadow-2xl">
+      <div className="mt-16 max-w-lg mx-auto bg-white rounded-3xl p-8 shadow-2xl text-center">
           <h3 className="text-lg font-semibold leading-8 text-slate-900">Special Launch Deal</h3>
-          <p className="mt-4 flex items-baseline gap-x-1">
+          <p className="mt-4 flex items-baseline justify-center gap-x-1">
             <span className="text-5xl font-bold tracking-tight text-slate-900">$1.99</span>
           </p>
           <p className="mt-4 text-base leading-7 text-slate-700">You get one set of personalized lyrics and two full song productions in different musical styles.</p>
           <a
             href="#create"
-            className="mt-8 block w-full rounded-md py-3 px-4 text-center text-base font-semibold text-white shadow-sm bg-pink-500 hover:bg-pink-600"
+            className="mt-8 block w-full rounded-md py-3 px-4 text-base font-semibold text-white shadow-sm bg-pink-500 hover:bg-pink-600"
           >
             Create Your Song Now
           </a>
-          <div className="mt-8 flex items-start gap-x-3 text-sm leading-6 text-slate-700">
+          <div className="mt-8 flex items-start justify-center gap-x-3 text-sm leading-6 text-slate-700">
+            <GiftIcon className="h-6 w-5 flex-none text-slate-500" aria-hidden="true" />
+            <span><b>Post-purchase:</b> Share your song via a customizable gift page with an embedded player and your own custom message!</span>
+          </div>
+          <div className="mt-8 flex items-start justify-center gap-x-3 text-sm leading-6 text-slate-700">
             <VideoCameraIcon className="h-6 w-5 flex-none text-slate-500" aria-hidden="true" />
             <span><b>Coming Soon:</b> Turn your song into a beautiful video montage with your own photos. This feature will be available in a future version!</span>
           </div>
@@ -422,7 +453,7 @@ const TestimonialsSection = () => {
     gold: 'bg-amber-500', // Assuming gold is a desired accent color for variety
   };
   return (
-    <section className="py-12 sm:py-16 bg-pink-50/50">
+    <section id="testimonials" className="py-12 sm:py-16 bg-pink-50/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
         <h2 className="text-base font-semibold leading-7 text-fuchsia-600">Don&apos;t Just Take Our Word For It</h2>        
@@ -476,6 +507,10 @@ const FaqSection = () => {
     { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' }, 
     { q: 'What if I don&apos;t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
     { q: 'Can I get a refund or a redo after I purchase?', a: 'Once you have paid and received the full-length songs, we cannot offer a redo or a refund. We provide the preview so you can be 100% sure you love it before you buy.' },
+    { q: 'How do I share the song as a gift?', a: 'After purchase, you&apos;ll get a shareable link to a beautiful gift page with the embedded song player. Easy to send via email or text!' },
+    { q: 'Is the process mobile-friendly?', a: 'Absolutely! Our site works seamlessly on phones and tablets, so you can create songs on the go.' },
+    { q: 'Can I request changes to the lyrics?', a: 'Yes! During the preview step, you can suggest edits, and we&apos;ll refine them before finalizing the music.' },
+    { q: 'What if my story is too short or too long?', a: 'No worries—short stories get creative flair, long ones get the highlights. We adapt to make it perfect.' },
   ];
 
   return (

@@ -1,5 +1,6 @@
 'use client';
 
+import { MusicalNoteIcon } from '@heroicons/react/24/solid';
 import React from 'react';
 
 export default function Footer() {
@@ -13,7 +14,10 @@ export default function Footer() {
     <footer className="bg-fuchsia-600 text-white/80 border-t border-fuchsia-700">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
         <div className="md:col-span-1">
-          <div className="font-logo text-3xl font-bold text-white">Personalized Song Maker</div>
+          <div className="flex items-center gap-2 font-logo text-2xl font-bold text-white">
+            <MusicalNoteIcon className="h-7 w-7" />
+            <span>Personalized Song Maker</span>
+          </div>
           <p className="mt-2 text-sm">The voice of your heart, in a song.</p>
         </div>
         <div className="md:col-span-3 flex flex-col sm:flex-row justify-between gap-8">
