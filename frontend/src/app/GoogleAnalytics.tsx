@@ -1,11 +1,10 @@
 'use client';
 
 import Script from 'next/script';
+import { GA_MEASUREMENT_ID } from './gtag';
 
 export default function GoogleAnalytics() {
-  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-
-  if (!gaMeasurementId) {
+  if (!GA_MEASUREMENT_ID) {
     if (process.env.NODE_ENV === 'development') {
       console.warn('Google Analytics Measurement ID is not set. GA will not be initialized.');
     }
@@ -16,7 +15,7 @@ export default function GoogleAnalytics() {
     <>
       <Script
         strategy="afterInteractive"
-        src={`https://www.googletagmanager.com/gtag/js?id=${gaMeasurementId}`}
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
       />
       <Script
         id="google-analytics-script"
@@ -26,7 +25,10 @@ export default function GoogleAnalytics() {
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', '${gaMeasurementId}');
+            
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_path: window.location.pathname,
+            });
           `,
         }}
       />

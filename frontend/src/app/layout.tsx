@@ -1,26 +1,13 @@
-'use client';
-
-import { usePathname } from 'next/navigation';
 import "./globals.css";
-import Footer from "./Footer";
-import Header from "./Header";
 import Clarity from './Clarity';
 import GoogleAnalytics from './GoogleAnalytics';
+import LayoutWrapper from "./LayoutWrapper";
 
 export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <LayoutWrapper>{children}</LayoutWrapper>
-  );
-}
-
-function LayoutWrapper({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname();
-  const isSharePage = pathname.startsWith('/share/');
-
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -45,9 +32,7 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
         <Clarity />
       </head>
       <body className="antialiased bg-white text-slate-700">
-        {!isSharePage && <Header />}
-        {children}
-        {!isSharePage && <Footer />}
+        <LayoutWrapper>{children}</LayoutWrapper>
       </body>
     </html>
   );
