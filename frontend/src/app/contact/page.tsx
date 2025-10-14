@@ -22,26 +22,24 @@ const ContactPage = () => {
     e.preventDefault();
     setIsLoading(true);
     setStatus('');
-
-    // In a real app, you'd send this to a backend service.
-    // For example:
-    // try {
-    //   const response = await fetch('/api/contact', { method: 'POST', body: JSON.stringify(formData) });
-    //   if (!response.ok) throw new Error('Something went wrong.');
-    //   setStatus('Thank you for your message! We will get back to you shortly.');
-    //   setFormData({ name: '', email: '', message: '' });
-    // } catch (error) {
-    //   setStatus('Failed to send message. Please try again later.');
-    // } finally {
-    //   setIsLoading(false);
-    // }
-
-    // For this example, we'll just simulate a success message.
-    console.log('Form submitted:', formData);
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate network delay
-    setStatus('Thank you for your message! We will get back to you shortly.');
-    setFormData({ name: '', email: '', message: '' });
-    setIsLoading(false);
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || 'Something went wrong.');
+      }
+      setStatus('Thank you for your message! We will get back to you shortly.');
+      setFormData({ name: '', email: '', message: '' });
+    } catch (error: any) {
+      setStatus(error.message || 'Failed to send message. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -62,8 +60,11 @@ const ContactPage = () => {
 
         <div className="mt-12 p-8 bg-slate-50 rounded-2xl shadow-sm border border-slate-200">
           {status ? (
-            <div className="text-center p-8 bg-green-100 text-green-800 rounded-lg">
-              <p>{status}</p>
+            <div className={`text-center p-8 rounded-lg ${
+                status.includes('Failed') ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+              }`}
+            >
+              <p className="font-medium">{status}</p>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-6">

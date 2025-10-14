@@ -61,7 +61,7 @@ const HeroSection = () => {
 
   return (
     <header className="relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-12 sm:pt-8 sm:pb-12 lg:flex lg:items-center lg:gap-x-10">
+      <div className="max-w-7xl mx-auto px-6 pt-8 pb-8 sm:pt-8 sm:pb-12 lg:flex lg:items-center lg:gap-x-10">
         <div className="max-w-2xl lg:mx-0 lg:flex-auto z-10">
           <div className="flex">
             <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-pink-600 ring-1 ring-pink-600/20 hover:ring-pink-600/30 bg-pink-50/80 backdrop-blur-sm">
@@ -111,14 +111,17 @@ const HeroSection = () => {
         </div>
         <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
           <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
+            <h3 className="text-sm font-semibold text-purple-600">Hear a Sample</h3>
             <div className="flex items-center justify-between">
-              <h4 className="font-semibold text-lg text-slate-900">For Pradnya </h4>
+              <h4 className="font-semibold text-lg text-slate-900">Anniversary Song</h4>
               <span className="text-sm font-medium rounded-full px-3 py-1 bg-fuchsia-100 text-fuchsia-600">
                 Acoustic Pop
               </span>
             </div>
-            <p className="text-sm text-slate-700 mt-1">A song about our journey together. From Husband to Wife</p>
-            <div className="mt-4 w-full bg-gray-200 rounded-full h-2">
+            <p className="text-sm text-slate-700 mt-1">
+              Listen to an example of a song created with our service.
+            </p>
+            <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
               <div className="h-2 rounded-full bg-pink-500" style={{ width: `${(currentTime / duration) * 100 || 0}%` }}></div>
             </div>
             <div className="mt-4 flex items-center gap-4">
@@ -129,7 +132,7 @@ const HeroSection = () => {
                 <source src="/samples/sample1.mp3" type="audio/mpeg" />
               </audio>
               <div className="text-sm">
-                <div className="font-medium text-slate-900">Now Playing: &quot;Our Adventure&quot;</div>
+                <div className="font-medium text-slate-900">Sample: &quot;Our Adventure&quot;</div>
               <div className="text-slate-600">
                   {formatTime(currentTime)} / {formatTime(duration)}
                 </div>
@@ -200,10 +203,10 @@ const CreateSongFormSection = () => {
   };
 
   return (
-    <section id="create" className="py-12 sm:py-16">
+    <section id="create" className="py-6 sm:py-10">
       <div className="max-w-3xl mx-auto px-6 lg:px-8 bg-white p-8 sm:p-12 rounded-2xl shadow-lg border border-gray-200">
         <div className="text-center">
-          <h2 className="text-base font-semibold leading-7 text-purple-600">Start Here</h2>
+          <h2 className="text-lg font-semibold leading-7 text-purple-600">Start Here</h2>
           <div className="mt-2 flex items-center justify-center gap-x-3">
             <PencilSquareIcon className="h-8 w-8 text-purple-600" />
             <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -293,10 +296,10 @@ const CreateSongFormSection = () => {
 
 // How It Works Section Component
 const HowItWorksSection = () => (
-  <section id="how" className="py-12 sm:py-16 bg-pink-50/50">
+  <section id="how" className="py-10 sm:py-14 bg-pink-50/50">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-purple-600">How It Works</h2>
+        <h2 className="text-lg font-semibold leading-7 text-purple-600">How It Works</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <SparklesIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -364,10 +367,10 @@ const HowItWorksSection = () => (
 
 // Samples Section Component
 const SamplesSection = () => (
-  <section id="samples" className="py-12 sm:py-16 bg-white">
+  <section id="samples" className="py-10 sm:py-14 bg-white">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-purple-600">Our Work</h2>
+        <h2 className="text-lg font-semibold leading-7 text-purple-600">Our Work</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <MusicalNoteIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -405,10 +408,10 @@ const SamplesSection = () => (
 
 // Pricing Section Component
 const PricingSection = () => (
-  <section id="pricing" className="py-12 sm:py-16 bg-gradient-to-br from-pink-500 to-purple-600">
+  <section id="pricing" className="py-10 sm:py-14 bg-gradient-to-br from-pink-500 to-purple-600">
     <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-base font-semibold leading-7 text-white">Inaugural Offer</h2>
+        <h2 className="text-lg font-semibold leading-7 text-white">Inaugural Offer</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <GiftIcon className="h-8 w-8 text-white" />
           <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
@@ -453,10 +456,10 @@ const TestimonialsSection = () => {
     gold: 'bg-amber-500', // Assuming gold is a desired accent color for variety
   };
   return (
-    <section id="testimonials" className="py-12 sm:py-16 bg-pink-50/50">
+    <section id="testimonials" className="py-10 sm:py-14 bg-pink-50/50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
       <div className="max-w-2xl mx-auto lg:text-center">
-        <h2 className="text-base font-semibold leading-7 text-purple-600">Don{'\u0027'}t Just Take Our Word For It</h2>
+        <h2 className="text-lg font-semibold leading-7 text-purple-600">Don{'\u0027'}t Just Take Our Word For It</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3"> 
           <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600" />
           <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
@@ -514,10 +517,10 @@ const FaqSection = () => {
   ];
 
   return (
-    <section id="faq" className="py-12 sm:py-16 bg-white">
+    <section id="faq" className="py-10 sm:py-14 bg-white">
       <div className="max-w-3xl mx-auto px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold leading-7 text-purple-600">Have Questions?</h2>
+          <h2 className="text-lg font-semibold leading-7 text-purple-600">Have Questions?</h2>
           <div className="mt-2 flex items-center justify-center gap-x-3">
             <QuestionMarkCircleIcon className="h-8 w-8 text-purple-600" />
             <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
