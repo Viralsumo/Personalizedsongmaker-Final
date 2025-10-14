@@ -1,3 +1,13 @@
+declare global {
+  interface Window {
+    gtag: (
+      command: 'config',
+      targetId: string,
+      config?: { [key: string]: unknown }
+    ) => void;
+  }
+}
+
 export const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
