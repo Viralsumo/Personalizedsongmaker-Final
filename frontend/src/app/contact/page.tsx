@@ -35,8 +35,12 @@ const ContactPage = () => {
       }
       setStatus('Thank you for your message! We will get back to you shortly.');
       setFormData({ name: '', email: '', message: '' });
-    } catch (error: any) {
-      setStatus(error.message || 'Failed to send message. Please try again later.');
+    } catch (error: unknown) {
+      let errorMessage = 'Failed to send message. Please try again later.';
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+      setStatus(errorMessage);
     } finally {
       setIsLoading(false);
     }
