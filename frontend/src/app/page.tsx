@@ -113,7 +113,7 @@ const HeroSection = () => {
           <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
             <h3 className="text-sm font-semibold text-purple-600">Hear a Sample</h3>
             <div className="flex items-center justify-between">
-              <h4 className="font-semibold text-lg text-slate-900">Anniversary Song</h4>
+              <h4 className="font-semibold text-lg text-slate-900">Anniversary Song for Pradnya</h4>
               <span className="text-sm font-medium rounded-full px-3 py-1 bg-fuchsia-100 text-fuchsia-600">
                 Acoustic Pop
               </span>
