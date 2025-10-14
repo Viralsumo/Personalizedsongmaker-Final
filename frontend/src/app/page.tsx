@@ -80,7 +80,7 @@ const HeroSection = () => {
             </h1>
           </div>
           <p className="mt-6 text-lg leading-8 text-slate-700">
-            Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say 'I love you'.
+            Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say &apos;I love you&apos;.
           </p>
           <div className="mt-10 flex items-center gap-x-6">
             <a

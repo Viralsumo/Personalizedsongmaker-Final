@@ -94,7 +94,13 @@ const ContactPage = () => {
 
         <div className="mt-12 text-center text-slate-600">
           <p>You can also email us directly at <a href="mailto:support@personalizedsongmaker.com" className="font-semibold text-pink-600 hover:underline">support@personalizedsongmaker.com</a>.</p>
-          <p className="mt-2">For common questions, check out our <Link href="/#faq" className="font-semibold text-pink-600 hover:underline">FAQ section</Link>.</p>
+          <p className="mt-4 flex items-center justify-center gap-x-1.5">
+            For common questions, check out our
+            <Link href="/#faq" className="inline-flex items-center gap-x-1 font-semibold text-pink-600 hover:underline">
+              <QuestionMarkCircleIcon className="h-5 w-5" aria-hidden="true" />
+              <span>FAQ section</span>
+            </Link>.
+          </p>
         </div>
       </div>
     </div>
