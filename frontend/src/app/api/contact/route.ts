@@ -21,6 +21,7 @@ export async function POST(request: Request) {
 
     const apiInstance = new TransactionalEmailsApi();
     // The type definition is a bit off in the SDK, so we cast to `any` as recommended by their docs.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (apiInstance as any).authentications.apiKey.apiKey = process.env.BREVO_API_KEY;
 
     const sendSmtpEmail = new SendSmtpEmail();
