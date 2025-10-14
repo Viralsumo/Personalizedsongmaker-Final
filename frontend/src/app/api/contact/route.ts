@@ -20,8 +20,7 @@ export async function POST(request: Request) {
     }
 
     const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-    const apiKey = apiInstance.authentications['apiKey'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
+    apiInstance.setApiKey(0, process.env.BREVO_API_KEY);
 
     const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
 
