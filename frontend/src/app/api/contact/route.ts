@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import * as SibApiV3Sdk from '@getbrevo/brevo';
+import { TransactionalEmailsApi, SendSmtpEmail } from '@getbrevo/brevo';
 
 export async function POST(request: Request) {
   // IMPORTANT: Replace with the email you want to receive messages at
@@ -19,14 +19,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    const defaultClient = SibApiV3Sdk.ApiClient.instance;
-    const apiKey = defaultClient.authentications['api-key'];
-    apiKey.apiKey = process.env.BREVO_API_KEY;
+    const apiInstance = new TransactionalEmailsApi();
+    // The type definition is a bit off in the SDK, so we cast to `any` as recommended by their docs.
+    (apiInstance as any).authentications.apiKey.apiKey = process.env.BREVO_API_KEY;
 
-    const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
-
-
-    const sendSmtpEmail = new SibApiV3Sdk.SendSmtpEmail();
+    const sendSmtpEmail = new SendSmtpEmail();
 
     sendSmtpEmail.subject = `New Message from ${name} via Contact Form`;
     sendSmtpEmail.htmlContent = `
