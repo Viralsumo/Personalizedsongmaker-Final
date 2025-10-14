@@ -158,6 +158,12 @@ const CreateSongFormSection = () => {
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState({
+    occasion: '',
+    to_person: '',
+    from_person: '',
+    story: '',
+  });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -168,6 +174,20 @@ const CreateSongFormSection = () => {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    
+    // Simple validation
+    const newErrors = { occasion: '', to_person: '', from_person: '', story: '' };
+    let hasError = false;
+    if (!formData.occasion) { newErrors.occasion = 'Please select an occasion.'; hasError = true; }
+    if (!formData.to_person.trim()) { newErrors.to_person = 'Recipient\'s name is required.'; hasError = true; }
+    if (!formData.from_person.trim()) { newErrors.from_person = 'Your name is required.'; hasError = true; }
+    if (formData.story.trim().length < 20) { newErrors.story = 'Please share a bit more of your story (at least 20 characters).'; hasError = true; }
+    
+    setValidationErrors(newErrors);
+    if (hasError) {
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const payload = {
@@ -231,6 +251,7 @@ const CreateSongFormSection = () => {
                 <option>Father{'\u0027'}s Day</option>
                 <option>Just Because</option>
               </select>
+              {validationErrors.occasion && <p className="mt-1 text-xs text-red-600">{validationErrors.occasion}</p>}
             </div>
             <div>
               <label htmlFor="style" className="block text-sm font-bold leading-6 text-slate-800">Music Style</label>
@@ -245,16 +266,19 @@ const CreateSongFormSection = () => {
             <div>
               <label htmlFor="to_person" className="block text-sm font-bold leading-6 text-slate-800">To (Recipient{'\u0027'}s Name)</label>
               <input type="text" name="to_person" id="to_person" value={formData.to_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Pradnya" required />
+              {validationErrors.to_person && <p className="mt-1 text-xs text-red-600">{validationErrors.to_person}</p>}
             </div>
             <div>
               <label htmlFor="from_person" className="block text-sm font-bold leading-6 text-slate-800">From (Your Name)</label>
               <input type="text" name="from_person" id="from_person" value={formData.from_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Sanket" required />
+              {validationErrors.from_person && <p className="mt-1 text-xs text-red-600">{validationErrors.from_person}</p>}
             </div>
           </div>
           <div>
             <label htmlFor="story" className="block text-sm font-bold leading-6 text-slate-800">Your Story</label>
             <textarea name="story" id="story" value={formData.story} onChange={handleInputChange} rows={5} placeholder="Share special memories, inside jokes, feelings, and anything that makes your story unique." className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" required />
             <p className="mt-2 text-xs text-slate-600">This is the most important part! The more detail, the better.</p>
+            {validationErrors.story && <p className="mt-1 text-xs text-red-600">{validationErrors.story}</p>}
           </div>
           <div>
             <label htmlFor="mood" className="block text-sm font-bold leading-6 text-slate-800">Mood / Vibe</label>
@@ -442,9 +466,12 @@ const PricingSection = () => (
           >
             Create Your Song Now
           </a>
-          <div className="mt-8 flex items-start justify-center gap-x-3 text-sm leading-6 text-slate-700">
-            <GiftIcon className="h-6 w-5 flex-none text-slate-500" aria-hidden="true" />
-            <span><b>Post-purchase:</b> Share your song via a customizable gift page with an embedded player and your own custom message!</span>
+          <div className="relative mt-8">
+            <div className="absolute -inset-2 rounded-xl bg-green-500/10 ring-1 ring-inset ring-green-500/20 animate-pulse"></div>
+            <div className="relative rounded-lg bg-white p-3 ring-1 ring-green-500/20 flex items-center gap-x-3 text-sm leading-6 text-slate-700">
+              <GiftIcon className="h-6 w-5 flex-none text-green-600" aria-hidden="true" />
+              <span className="text-slate-800"><b>Post-purchase:</b> Share your song via a customizable gift page with an embedded player and your own custom message!</span>
+            </div>
           </div>
           <div className="mt-8 flex items-start justify-center gap-x-3 text-sm leading-6 text-slate-700">
             <VideoCameraIcon className="h-6 w-5 flex-none text-slate-500" aria-hidden="true" />
