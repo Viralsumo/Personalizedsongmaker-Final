@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 import "./globals.css";
 import Footer from "./Footer";
 import Header from "./Header";
+import Clarity from './Clarity';
+import GoogleAnalytics from './GoogleAnalytics';
 
 export default function RootLayout({
   children,
@@ -24,6 +26,8 @@ function LayoutWrapper({ children }: { children: React.ReactNode }) {
       <head>
         <title>Personalized Song Maker | Turn Your Story Into a Song</title>
         <meta name="description" content="Create a unique, personalized song from your stories. The perfect gift for any occasion. Fast, affordable, and heartfelt." />
+        <GoogleAnalytics />
+        <Clarity />
       </head>
       <body className="antialiased bg-white text-slate-700">
         {!isSharePage && <Header />}

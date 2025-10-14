@@ -4,8 +4,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Feature from './Feature';
 import FaqItem from './FaqItem'; // Assuming FaqItem is in the same directory
-import { MusicalNoteIcon, PencilIcon, SparklesIcon, HeartIcon, PlayIcon, VideoCameraIcon, CurrencyDollarIcon, QuestionMarkCircleIcon, GiftIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
-import { PauseIcon, CheckBadgeIcon, ShieldCheckIcon, PencilSquareIcon } from '@heroicons/react/24/solid';
+import { MusicalNoteIcon, PencilIcon, SparklesIcon, PlayIcon, VideoCameraIcon, CurrencyDollarIcon, QuestionMarkCircleIcon, GiftIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
+import { PauseIcon, CheckBadgeIcon, ShieldCheckIcon, PencilSquareIcon, HeartIcon } from '@heroicons/react/24/solid';
 
 // Hero Section Component
 const HeroSection = () => {
@@ -74,7 +74,7 @@ const HeroSection = () => {
             </div>
           </div>
           <div className="mt-10 flex items-center gap-x-4">
-            <GiftIcon className="h-24 w-24 text-pink-500 hidden sm:block" />
+            <GiftIcon className="h-16 w-16 sm:h-24 sm:w-24 text-pink-500 animate-pulse" />
             <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
               Turn Your Feelings Into a&nbsp;Timeless Personalized Song
             </h1>
@@ -82,10 +82,10 @@ const HeroSection = () => {
           <p className="mt-6 text-lg leading-8 text-slate-700">
             Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say &apos;I love you&apos;.
           </p>
-          <div className="mt-10 flex items-center gap-x-6">
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-y-4 sm:gap-y-0 sm:gap-x-6">
             <a
               href="#create"
-              className="rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
+              className="w-full sm:w-auto text-center rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
             >
               Create Your Song
             </a>
@@ -297,8 +297,8 @@ const CreateSongFormSection = () => {
 // How It Works Section Component
 const HowItWorksSection = () => (
   <section id="how" className="py-10 sm:py-14 bg-pink-50/50">
-    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto lg:text-center">
+    <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <div className="max-w-2xl mx-auto">
         <h2 className="text-lg font-semibold leading-7 text-purple-600">How It Works</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <SparklesIcon className="h-8 w-8 text-purple-600" />
@@ -311,49 +311,57 @@ const HowItWorksSection = () => (
         </p>
       </div>
       <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-        <dl className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-          <Feature
-            title={
-              <span className="flex items-center gap-x-2">
-                1. Tell Your Story <PencilIcon className="h-5 w-5 text-slate-500" />
-              </span>
-            }
-            desc="Pour your heart out. Share the memories, the laughter, and the little details that make your story unique. This is the soul of your song."
-            icon={<PencilIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-          />
-          <Feature
-            title={
-              <span className="flex items-center gap-x-2">
-                2. We Craft The Lyrics <MusicalNoteIcon className="h-5 w-5 text-slate-500" />
-              </span>
-            }
-            desc="Our creative AI instantly weaves your story into beautiful lyrics. You get to review and approve every word before we create the music."
-            icon={<MusicalNoteIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-          />
-          <Feature
-            title={
-              <span className="flex items-center gap-x-2">
-                3. Preview Your Song <SparklesIcon className="h-5 w-5 text-slate-500" />
-              </span>
-            }
-            desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
-            icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-          />
-          <Feature
-            title={
-              <span className="flex items-center gap-x-2">
-                4. Pay & Receive <CurrencyDollarIcon className="h-5 w-5 text-slate-500" />
-              </span>
-            }
-            desc="Love it? For just $1.99, unlock both full-length songs. Download them instantly or send them as a beautiful, shareable gift page."
-            icon={<CurrencyDollarIcon className="h-8 w-8 text-white" />}
-          />
-        </dl>
+        <ol role="list" className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
+          <li className="text-left">
+            <Feature
+              title={
+                <span className="flex items-center gap-x-2">
+                  1. Tell Your Story <PencilIcon className="h-5 w-5 text-slate-500" />
+                </span>
+              }
+              desc="Pour your heart out. Share the memories, the laughter, and the little details that make your story unique. This is the soul of your song."
+              icon={<PencilIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
+            />
+          </li>
+          <li className="text-left">
+            <Feature
+              title={
+                <span className="flex items-center gap-x-2">
+                  2. We Craft The Lyrics <MusicalNoteIcon className="h-5 w-5 text-slate-500" />
+                </span>
+              }
+              desc="Our creative AI instantly weaves your story into beautiful lyrics. You get to review and approve every word before we create the music."
+              icon={<MusicalNoteIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
+            />
+          </li>
+          <li className="text-left">
+            <Feature
+              title={
+                <span className="flex items-center gap-x-2">
+                  3. Preview Your Song <SparklesIcon className="h-5 w-5 text-slate-500" />
+                </span>
+              }
+              desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
+              icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
+            />
+          </li>
+          <li className="text-left">
+            <Feature
+              title={
+                <span className="flex items-center gap-x-2">
+                  4. Pay & Receive <CurrencyDollarIcon className="h-5 w-5 text-slate-500" />
+                </span>
+              }
+              desc="Love it? For just $1.99, unlock both full-length songs. Download them instantly or send them as a beautiful, shareable gift page."
+              icon={<CurrencyDollarIcon className="h-8 w-8 text-white" />}
+            />
+          </li>
+        </ol>
       </div>
-      <div className="mt-16 flex justify-center items-center gap-x-6">
+      <div className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-6">
         <a
           href="#create"
-          className="rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
+          className="w-full max-w-xs sm:w-auto text-center rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
         >
           Start Creating Now
         </a>
@@ -368,8 +376,8 @@ const HowItWorksSection = () => (
 // Samples Section Component
 const SamplesSection = () => (
   <section id="samples" className="py-10 sm:py-14 bg-white">
-    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto lg:text-center">
+    <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <div className="max-w-2xl mx-auto">
         <h2 className="text-lg font-semibold leading-7 text-purple-600">Our Work</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3">
           <MusicalNoteIcon className="h-8 w-8 text-purple-600" />
@@ -393,7 +401,7 @@ const SamplesSection = () => (
                 <h4 className="font-semibold text-slate-900">{sample.title}</h4>
                 <p className="text-sm text-slate-700">{sample.genre}</p>
               </div>
-              <HeartIcon className="w-6 h-6 text-gray-300 hover:text-pink-500 transition-colors" />
+              <HeartIcon className="w-6 h-6 text-pink-500" />
             </div>
             <audio controls preload="none" className="w-full">
               <source src={`/samples/sample${sample.id}.mp3`} type="audio/mpeg" />
@@ -457,8 +465,8 @@ const TestimonialsSection = () => {
   };
   return (
     <section id="testimonials" className="py-10 sm:py-14 bg-pink-50/50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto lg:text-center">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+      <div className="max-w-2xl mx-auto">
         <h2 className="text-lg font-semibold leading-7 text-purple-600">Don{'\u0027'}t Just Take Our Word For It</h2>
         <div className="mt-2 flex items-center justify-center gap-x-3"> 
           <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600" />
