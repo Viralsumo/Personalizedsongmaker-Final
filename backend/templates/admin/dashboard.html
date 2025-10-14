@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,6 +18,7 @@
             left: 0;
             height: 100%;
             width: 250px;
+            z-index: 1000;
             background-color: #343a40;
             padding-top: 1rem;
         }
@@ -35,16 +37,45 @@
             margin-left: 250px;
             padding: 2rem;
         }
+        .navbar-toggler {
+            display: none;
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                left: -250px;
+                transition: left 0.3s ease-in-out;
+            }
+            .sidebar.show {
+                left: 0;
+            }
+            .content {
+                margin-left: 0;
+            }
+            .navbar-toggler {
+                display: block;
+            }
+        }
     </style>
 </head>
+
 <body>
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
         <h3 class="text-white text-center">Song Maker Admin</h3>
         <a href="/admin" class="active">Dashboard</a>
         <a href="/admin/tasks">Task Explorer</a>
     </div>
 
     <div class="content">
+        <nav class="navbar navbar-light bg-light mb-4 d-lg-none">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" id="sidebarToggle">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <span class="navbar-brand mb-0 h1">Admin Dashboard</span>
+            </div>
+        </nav>
+
         <h1 class="mb-4">Dashboard Overview</h1>
         
         <!-- KPI Cards -->
@@ -225,5 +256,18 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', function () {
+                    sidebar.classList.toggle('show');
+                });
+            }
+        });
+    </script>
 </body>
 </html>

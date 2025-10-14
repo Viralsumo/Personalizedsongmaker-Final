@@ -38,6 +38,14 @@ export default function Footer() {
             </ul>
           </div>
           <div>
+            <h4 className="font-semibold text-white">Legal</h4>
+            <ul className="mt-2 space-y-2 text-sm">
+              <li><a href="/terms" className="hover:text-white">Terms of Service</a></li>
+              <li><a href="/privacy" className="hover:text-white">Privacy Policy</a></li>
+              <li><a href="/disclaimer" className="hover:text-white">Disclaimer</a></li>
+            </ul>
+          </div>
+          <div>
             <h4 className="font-semibold text-white">Newsletter</h4>
             <p className="text-sm mt-2">
               Get updates on new features and special offers.
