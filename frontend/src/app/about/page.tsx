@@ -20,7 +20,7 @@ const AboutPage = () => {
             Personalized Song Maker was born from a simple idea: that the most powerful emotions are best expressed through music. We believe that everyone has a unique story to tell, a special memory to cherish, or a heartfelt message to share. But not everyone has the tools to turn those feelings into a song.
           </p>
           <p>
-            That&apos;s where we come in.
+            That{'\u0027'}s where we come in.
           </p>
 
           <div className="mt-12 not-prose grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -30,7 +30,7 @@ const AboutPage = () => {
                 <h3 className="text-xl font-bold text-slate-800">Our Mission</h3>
               </div>
               <p className="mt-3 text-slate-700">
-                Our mission is to make it easy and affordable for anyone to create a studio-quality, personalized song. We want to help you celebrate life&apos;s biggest moments—and the small ones, too—with a gift that is truly one-of-a-kind and will be treasured forever.
+                Our mission is to make it easy and affordable for anyone to create a studio-quality, personalized song. We want to help you celebrate life{'\u0027'}s biggest moments—and the small ones, too—with a gift that is truly one-of-a-kind and will be treasured forever.
               </p>
             </div>
             <div className="bg-pink-50 p-6 rounded-2xl">
@@ -45,7 +45,7 @@ const AboutPage = () => {
           </div>
 
           <p className="mt-12">
-            We are a small team of musicians, developers, and storytellers dedicated to creating moments of joy and connection. Thank you for letting us be a part of your story. We can&apos;t wait to hear what we&apos;ll create together.
+            We are a small team of musicians, developers, and storytellers dedicated to creating moments of joy and connection. Thank you for letting us be a part of your story. We can{'\u0027'}t wait to hear what we{'\u0027'}ll create together.
           </p>
         </div>
       </div>
