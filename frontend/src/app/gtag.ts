@@ -22,4 +22,4 @@ export const pageview = (url: string) => {
 
 // You can add other event tracking functions here
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
-// export const event = ({ action, category, label, value }) => { ... };
+// export const event = ({ action, category, label, value }) => { ... }

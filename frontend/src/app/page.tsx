@@ -69,7 +69,7 @@ const HeroSection = () => {
               <span className="h-4 w-px bg-pink-600/20" aria-hidden="true" />
               <a href="#pricing" className="flex items-center gap-x-1">
                 <span className="absolute inset-0" aria-hidden="true" />
-                Inaugural deal: 2 songs for $1.99
+                <b>80% Off Launch Deal:</b> Get 2 songs for just $1.99
               </a>
             </div>
           </div>
@@ -309,7 +309,7 @@ const CreateSongFormSection = () => {
                   </svg>
                   Generating Your Lyrics...
                 </>
-              ) : 'Generate Lyrics & See Price'}
+              ) : 'Preview My Lyrics'}
             </button>
           </div>
         </form>
@@ -456,10 +456,13 @@ const PricingSection = () => (
       </div>
       <div className="mt-16 max-w-lg mx-auto bg-white rounded-3xl p-8 shadow-2xl text-center">
           <h3 className="text-lg font-semibold leading-8 text-slate-900">Special Launch Deal</h3>
-          <p className="mt-4 flex items-baseline justify-center gap-x-1">
+          <p className="mt-4 flex items-baseline justify-center gap-x-2">
+            <span className="text-3xl font-medium tracking-tight text-slate-500 line-through">$9.99</span>
             <span className="text-5xl font-bold tracking-tight text-slate-900">$1.99</span>
           </p>
-          <p className="mt-4 text-base leading-7 text-slate-700">You get one set of personalized lyrics and two full song productions in different musical styles.</p>
+          <p className="mt-4 text-base leading-7 text-slate-700">
+            For a limited time, get one set of personalized lyrics and two full song productions in different musical styles. That's <b>80% off</b> our regular price!
+          </p>
           <a
             href="#create"
             className="mt-8 block w-full rounded-md py-3 px-4 text-base font-semibold text-white shadow-sm bg-pink-500 hover:bg-pink-600"
@@ -467,8 +470,8 @@ const PricingSection = () => (
             Create Your Song Now
           </a>
           <div className="relative mt-8">
-            <div className="absolute -inset-2 rounded-xl bg-green-500/10 ring-1 ring-inset ring-green-500/20 animate-pulse"></div>
-            <div className="relative rounded-lg bg-white p-3 ring-1 ring-green-500/20 flex items-center gap-x-3 text-sm leading-6 text-slate-700">
+            <div className="absolute -inset-2 rounded-xl bg-green-500/50 ring-1 ring-inset ring-green-500/50 animate-pulse"></div>
+            <div className="relative rounded-lg bg-white p-3 ring-1 ring-green-500/50 flex items-center gap-x-3 text-sm leading-6 text-slate-700">
               <GiftIcon className="h-6 w-5 flex-none text-green-600" aria-hidden="true" />
               <span className="text-slate-800"><b>Post-purchase:</b> Share your song via a customizable gift page with an embedded player and your own custom message!</span>
             </div>
