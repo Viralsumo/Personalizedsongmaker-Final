@@ -5,7 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
 import { COLORS } from '../../constants';
-import LoadingIndicator from './LoadingIndicator';
+import LoadingOverlay from '../../lyrics-preview/LoadingOverlay';
 import {
   PayPalScriptProvider, PayPalButtons
 } from '@paypal/react-paypal-js';
@@ -199,7 +199,7 @@ export default function SongPreviewPage(): JSX.Element {
   const renderContent = (): JSX.Element | null => {
     switch (status) {
       case 'pending':
-        return <LoadingIndicator />;
+        return <LoadingOverlay />;
 
       case 'completed':
         return (
