@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { PlayIcon, PauseIcon } from '@heroicons/react/24/solid';
 import { COLORS } from '../../constants';
+import LoadingIndicator from './LoadingIndicator';
 import {
   PayPalScriptProvider, PayPalButtons
 } from '@paypal/react-paypal-js';
@@ -198,15 +199,7 @@ export default function SongPreviewPage(): JSX.Element {
   const renderContent = (): JSX.Element | null => {
     switch (status) {
       case 'pending':
-        return (
-          <div>
-            <h2 className="text-3xl font-bold">Composing Your Masterpiece...</h2>
-            <p className="mt-4 text-slate-600">This can take a few minutes. Please wait!</p>
-            <div className="mt-8">
-              <div className="w-16 h-16 border-4 border-dashed rounded-full animate-spin border-pink-500 mx-auto" />
-            </div>
-          </div>
-        );
+        return <LoadingIndicator />;
 
       case 'completed':
         return (
