@@ -461,7 +461,7 @@ const PricingSection = () => (
             <span className="text-5xl font-bold tracking-tight text-slate-900">$1.99</span>
           </p>
           <p className="mt-4 text-base leading-7 text-slate-700">
-            For a limited time, get one set of personalized lyrics and two full song productions in different musical styles. That's <b>80% off</b> our regular price!
+            For a limited time, get one set of personalized lyrics and two full song productions in different musical styles. That&apos;s <b>80% off</b> our regular price!
           </p>
           <a
             href="#create"
