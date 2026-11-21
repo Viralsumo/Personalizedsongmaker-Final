@@ -35,6 +35,7 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY')
 
 # --- Configuration Loading ---
 app.config['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
+app.config['OPENAI_MODEL'] = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 app.config['SUNO_API_KEY'] = os.getenv('SUNO_API_KEY')
 app.config['ADMIN_USERNAME'] = os.getenv('ADMIN_USERNAME')
 app.config['ADMIN_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
@@ -259,7 +260,7 @@ def generate_lyrics():
         logger.info(f"Surprise style selected: {style}")
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model=app.config.get('OPENAI_MODEL', 'gpt-4o-mini'),
             messages=[{"role": "user", "content": f"Generate {occasion} lyrics for {name}. Details: {details}. Style: {style}. 2 verses, chorus, rhyme, 100-150 words."}]
         )
         lyrics = response.choices[0].message.content
