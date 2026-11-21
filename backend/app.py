@@ -259,7 +259,7 @@ def generate_lyrics():
         logger.info(f"Surprise style selected: {style}")
     try:
         response = openai.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": f"Generate {occasion} lyrics for {name}. Details: {details}. Style: {style}. 2 verses, chorus, rhyme, 100-150 words."}]
         )
         lyrics = response.choices[0].message.content
