@@ -24,10 +24,10 @@ export default function Footer() {
           <div>
             <h4 className="font-semibold text-white">Occasions</h4>
             <ul className="mt-2 space-y-2 text-sm">
-              <li><a href="/occasion/birthday" className="hover:text-white">Birthday</a></li>
-              <li><a href="/occasion/anniversary" className="hover:text-white">Anniversary</a></li>
-              <li><a href="/occasion/wedding" className="hover:text-white">Wedding</a></li>
-              <li><a href="/occasion/valentines" className="hover:text-white">Valentine&apos;s Day</a></li>
+              <li><a href="/custom-birthday-song" className="hover:text-white">Custom Birthday Song</a></li>
+              <li><a href="/personalized-anniversary-song" className="hover:text-white">Anniversary Song</a></li>
+              <li><a href="/songfinch-alternative" className="hover:text-white text-yellow-300 font-medium">Songfinch Alternative</a></li>
+              <li><a href="/#create" className="hover:text-white">Wedding &amp; Valentine&apos;s</a></li>
             </ul>
           </div>
           <div>

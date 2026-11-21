@@ -1,0 +1,22 @@
+# Environments
+.env
+.env*.local
+
+# Dependencies
+node_modules/
+
+# Next.js build
+.next/
+out/
+
+# Python / Virtualenv
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# macOS
+.DS_Store
+
+# Ephemeral previews
+previews/
