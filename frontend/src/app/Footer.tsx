@@ -1,63 +1,68 @@
 'use client';
 
-import { MusicalNoteIcon } from '@heroicons/react/24/solid';
 import React from 'react';
+import Link from 'next/link';
+import { MusicalNoteIcon } from '@heroicons/react/24/solid';
 
 export default function Footer() {
-  const handleSubscribe = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert('Thank you for subscribing!');
-    // In a real app, you would handle form submission here
-  };
-
   return (
-    <footer className="bg-fuchsia-600 text-white/80 border-t border-fuchsia-700">
-      <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div className="md:col-span-1">
+    <footer className="bg-fuchsia-950 text-white/80 border-t border-fuchsia-900">
+      <div className="max-w-7xl mx-auto px-6 py-12 lg:py-16 grid grid-cols-1 md:grid-cols-5 gap-8">
+        
+        {/* Brand Column */}
+        <div className="md:col-span-2 space-y-3">
           <div className="flex items-center gap-2 font-logo text-2xl font-bold text-white">
-            <MusicalNoteIcon className="h-7 w-7" />
+            <MusicalNoteIcon className="h-7 w-7 text-pink-500" />
             <span>Personalized Song Maker</span>
           </div>
-          <p className="mt-2 text-sm">The voice of your heart, in a song.</p>
+          <p className="text-sm text-slate-300 max-w-sm leading-relaxed">
+            Turn real love stories, childhood memories, and inside jokes into radio-quality studio songs &amp; photo video keepsakes in under 3 minutes.
+          </p>
         </div>
-        <div className="md:col-span-3 flex flex-col sm:flex-row justify-between gap-8">
-          <div>
-            <h4 className="font-semibold text-white">Occasions</h4>
-            <ul className="mt-2 space-y-2 text-sm">
-              <li><a href="/custom-birthday-song" className="hover:text-white">Custom Birthday Song</a></li>
-              <li><a href="/personalized-anniversary-song" className="hover:text-white">Anniversary Song</a></li>
-              <li><a href="/songfinch-alternative" className="hover:text-white text-yellow-300 font-medium">Songfinch Alternative</a></li>
-              <li><a href="/#create" className="hover:text-white">Wedding &amp; Valentine&apos;s</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white">Company</h4>
-            <ul className="mt-2 space-y-2 text-sm">
-              <li><a href="/about" className="hover:text-white">About Us</a></li>
-              <li><a href="/contact" className="hover:text-white">Contact</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white">Legal</h4>
-            <ul className="mt-2 space-y-2 text-sm">
-              <li><a href="/terms" className="hover:text-white">Terms of Service</a></li>
-              <li><a href="/privacy" className="hover:text-white">Privacy Policy</a></li>
-              <li><a href="/disclaimer" className="hover:text-white">Disclaimer</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 className="font-semibold text-white">Newsletter</h4>
-            <p className="text-sm mt-2">
-              Get updates on new features and special offers.
-            </p>
-            <form onSubmit={handleSubscribe} className="mt-4 flex gap-2">
-              <input type="email" placeholder="Your email" className="border rounded-lg px-3 py-2 text-sm w-full text-slate-800" required />
-              <button type="submit" className="px-4 py-2 rounded-lg font-semibold text-sm text-white bg-pink-500 hover:bg-pink-600">Subscribe</button>
-            </form>
-          </div>
+
+        {/* Column 1: Occasions */}
+        <div>
+          <h4 className="font-bold text-white text-sm uppercase tracking-wider">Occasions</h4>
+          <ul className="mt-3 space-y-2 text-xs">
+            <li><Link href="/custom-wedding-song" className="hover:text-white transition-colors">Wedding &amp; First Dance</Link></li>
+            <li><Link href="/personalized-anniversary-song" className="hover:text-white transition-colors">Anniversary Songs</Link></li>
+            <li><Link href="/custom-birthday-song" className="hover:text-white transition-colors">Custom Birthday Song</Link></li>
+            <li><Link href="/custom-love-song" className="hover:text-white transition-colors">Romantic Love Song</Link></li>
+            <li><Link href="/personalized-mothers-day-song" className="hover:text-white transition-colors">Mother&apos;s Day Song</Link></li>
+            <li><Link href="/custom-fathers-day-song" className="hover:text-white transition-colors">Father&apos;s Day Song</Link></li>
+            <li><Link href="/custom-retirement-song" className="hover:text-white transition-colors">Retirement Song</Link></li>
+          </ul>
         </div>
+
+        {/* Column 2: Compare & Features */}
+        <div>
+          <h4 className="font-bold text-white text-sm uppercase tracking-wider">Compare &amp; Features</h4>
+          <ul className="mt-3 space-y-2 text-xs">
+            <li><Link href="/songfinch-alternative" className="hover:text-white text-yellow-300 font-medium">Songfinch Alternative</Link></li>
+            <li><Link href="/songlorious-alternative" className="hover:text-white text-yellow-300 font-medium">Songlorious Alternative</Link></li>
+            <li><Link href="/best-custom-song-services" className="hover:text-white">Best Song Services 2026</Link></li>
+            <li><Link href="/photo-video-maker-with-custom-song" className="hover:text-white">Photo Video Keepsake</Link></li>
+            <li><Link href="/free-custom-song-preview" className="hover:text-white">Free Audio Preview</Link></li>
+          </ul>
+        </div>
+
+        {/* Column 3: Company & Legal */}
+        <div>
+          <h4 className="font-bold text-white text-sm uppercase tracking-wider">Company &amp; Legal</h4>
+          <ul className="mt-3 space-y-2 text-xs">
+            <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+            <li><Link href="/contact" className="hover:text-white transition-colors">Contact Support</Link></li>
+            <li><Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link></li>
+            <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+            <li><Link href="/disclaimer" className="hover:text-white transition-colors">Disclaimer</Link></li>
+          </ul>
+        </div>
+
       </div>
-      <div className="text-center py-4 border-t border-fuchsia-700 text-sm text-white/70">© {new Date().getFullYear()} Personalized Song Maker. All rights reserved.</div>
+
+      <div className="text-center py-5 border-t border-fuchsia-900 text-xs text-white/60">
+        &copy; {new Date().getFullYear()} PersonalizedSongMaker.com. All rights reserved. Studio quality music and videos crafted with love.
+      </div>
     </footer>
   );
 }

@@ -7,7 +7,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: ['/song-download/', '/lyrics-preview', '/api/'],
+      disallow: ['/song-download/', '/lyrics-preview', '/api/', '/share/'],
     },
     sitemap: `${baseUrl}/sitemap.xml`,
   };

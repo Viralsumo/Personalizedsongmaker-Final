@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: 'Personalized Anniversary Song | Turn Your Love Story Into a Custom Ballad',
   description:
-    'Turn your love story into a custom studio ballad for your wedding anniversary. Celebrate where you met, favorite milestones, and your future together. From $1.99 with free preview.',
+    'Turn your love story into a custom studio ballad for your wedding anniversary. Celebrate where you met, favorite milestones, and your future together. From $4.99 with free preview.',
   alternates: {
     canonical: 'https://www.personalizedsongmaker.com/personalized-anniversary-song',
   },
@@ -39,7 +39,7 @@ const jsonLd = {
       image: 'https://www.personalizedsongmaker.com/og-image.png',
       offers: {
         '@type': 'Offer',
-        price: '1.99',
+        price: '4.99',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
         url: 'https://www.personalizedsongmaker.com/personalized-anniversary-song',
@@ -66,7 +66,7 @@ const jsonLd = {
           name: 'Can I hear the anniversary song before paying?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! You can generate lyrics and listen to a studio preview of your track completely free before purchasing the full MP3 download and personalized gift page for $1.99.',
+            text: 'Yes! You can generate lyrics and listen to a studio preview of your track completely free before purchasing the full MP3 download and personalized gift page for $4.99.',
           },
         },
         {
@@ -111,7 +111,7 @@ export default function PersonalizedAnniversarySongPage() {
               <span className="text-rose-600">Timeless Custom Anniversary Ballad</span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Remember the awkward first date, the late-night talks, and everything you&apos;ve built together. We turn your real journey into a radio-quality acoustic ballad in <strong className="text-slate-900">under 3 minutes</strong> for just <strong className="text-rose-600">$1.99</strong>.
+              Remember the awkward first date, the late-night talks, and everything you&apos;ve built together. We turn your real journey into a radio-quality acoustic ballad in <strong className="text-slate-900">under 3 minutes</strong> for just <strong className="text-rose-600">$4.99</strong>.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -119,7 +119,7 @@ export default function PersonalizedAnniversarySongPage() {
                 href="#create"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl text-lg font-bold text-white bg-rose-600 hover:bg-rose-700 shadow-lg shadow-rose-600/25 transition-all text-center"
               >
-                Create Your Anniversary Song ($1.99)
+                Create Your Anniversary Song ($4.99)
               </a>
               <a
                 href="#sample"
@@ -337,7 +337,7 @@ export default function PersonalizedAnniversarySongPage() {
                   Do I have to pay upfront?
                 </h3>
                 <p className="mt-2 text-slate-600 leading-relaxed text-sm">
-                  Never. You can create your custom lyrics and listen to your song preview completely free. You only pay $1.99 when you love the song and are ready to download the full track.
+                  Never. You can create your custom lyrics and listen to your song preview completely free. You only pay $4.99 when you love the song and are ready to download the full track.
                 </p>
               </div>
 

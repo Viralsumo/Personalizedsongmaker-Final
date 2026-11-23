@@ -28,6 +28,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # In a production environment like Render, variables are set directly.
 if os.getenv('RENDER') is None:
     load_dotenv(os.path.join(basedir, '.env'))
+    load_dotenv(os.path.join(basedir, '..', '.env'))
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -37,11 +38,13 @@ app.secret_key = os.getenv('FLASK_SECRET_KEY')
 app.config['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
 app.config['OPENAI_MODEL'] = os.getenv('OPENAI_MODEL', 'gpt-4o-mini')
 app.config['SUNO_API_KEY'] = os.getenv('SUNO_API_KEY')
+app.config['DEV_COUPON_CODE'] = os.getenv('DEV_COUPON_CODE', 'RAAM100')
+
 app.config['ADMIN_USERNAME'] = os.getenv('ADMIN_USERNAME')
 app.config['ADMIN_PASSWORD'] = os.getenv('ADMIN_PASSWORD')
 app.config['PAYPAL_CLIENT_ID'] = os.getenv('PAYPAL_CLIENT_ID')
 app.config['PAYPAL_CLIENT_SECRET'] = os.getenv('PAYPAL_CLIENT_SECRET')
-app.config['SONG_PRICE'] = os.getenv('SONG_PRICE', '1.99')
+app.config['SONG_PRICE'] = os.getenv('SONG_PRICE', '4.99')
 app.config['PAYPAL_MODE'] = os.getenv('PAYPAL_MODE', 'sandbox')
 app.config['PUBLIC_URL'] = os.getenv('PUBLIC_URL')
 app.config['DATABASE_URL'] = os.getenv('DATABASE_URL')
@@ -54,35 +57,64 @@ if app.config['PAYPAL_MODE'] == 'live':
 else:
     PAYPAL_API_BASE_URL = "https://api-m.sandbox.paypal.com"
 
-# --- Data and Database Setup for Production ---
-# The local preview directory is still useful for local dev, but on Render it will be ephemeral.
-# We will generate previews on-the-fly instead of saving them long-term.
-PREVIEW_DIR = os.path.join(basedir, 'previews') # Keep previews local, they are ephemeral anyway
+import sqlite3
+
+class SQLiteCursorWrapper:
+    def __init__(self, cursor):
+        self.cursor = cursor
+    def execute(self, query, params=None):
+        q = query.replace('%s', '?')
+        if params is not None:
+            return self.cursor.execute(q, params)
+        return self.cursor.execute(q)
+    def fetchone(self):
+        row = self.cursor.fetchone()
+        return dict(row) if row is not None else None
+    def fetchall(self):
+        return [dict(r) for r in self.cursor.fetchall()]
+    def close(self):
+        self.cursor.close()
+
+class SQLiteConnectionWrapper:
+    def __init__(self, conn):
+        self.conn = conn
+        self.conn.row_factory = sqlite3.Row
+    def cursor(self, cursor_factory=None):
+        return SQLiteCursorWrapper(self.conn.cursor())
+    def commit(self):
+        self.conn.commit()
+    def rollback(self):
+        self.conn.rollback()
+    def close(self):
+        self.conn.close()
+    def set_isolation_level(self, level):
+        pass
+
+# --- Data and Database Setup for Production & Local Testing ---
+PREVIEW_DIR = os.path.join(basedir, 'previews')
 
 def get_db():
     db_url = app.config.get('DATABASE_URL')
-    if not db_url:
-        logger.error("DATABASE_URL environment variable is not set.")
-        raise ValueError("DATABASE_URL environment variable is not set. Cannot connect to the database.")
-    db = psycopg2.connect(db_url)
-    return db
+    if db_url:
+        return psycopg2.connect(db_url)
+    # Local fallback to SQLite if no DATABASE_URL is set in local environment
+    sqlite_path = os.path.join(basedir, 'tunetailor.db')
+    return SQLiteConnectionWrapper(sqlite3.connect(sqlite_path))
 
 def init_db():
     """Create tasks table if not exists on app startup."""
+    db_url = app.config.get('DATABASE_URL')
+    if not db_url:
+        logger.info("Using local SQLite database fallback ('tunetailor.db').")
+        return
+
     db = None
     cur = None
     try:
-        db_url = app.config.get('DATABASE_URL')
-        if not db_url:
-            logger.warning("No DATABASE_URL—skipping DB init.")
-            return
-
         db = psycopg2.connect(db_url)
         db.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         cur = db.cursor()
 
-        # This is a safe, idempotent initialization.
-        # It ensures the table exists but does NOT drop it, preserving data.
         cur.execute("""
             CREATE TABLE IF NOT EXISTS tasks (
                 id SERIAL PRIMARY KEY,
@@ -108,8 +140,6 @@ def init_db():
             );
         """)
 
-        # Manual Migration: Add new columns if they don't exist.
-        # This is a safe way to update the schema without losing data.
         columns_to_add = {
             'shareable_id': 'TEXT UNIQUE',
             'recipient_message': 'TEXT',
@@ -124,43 +154,16 @@ def init_db():
             """, (column,))
             
             if cur.fetchone() is None:
-                # Column does not exist, so add it
                 alter_query = f"ALTER TABLE tasks ADD COLUMN {column} {col_type};"
                 cur.execute(alter_query)
                 logger.info(f"Added missing column '{column}' to 'tasks' table.")
 
-        cur.execute("""
-            CREATE TABLE IF NOT EXISTS tasks (
-                id SERIAL PRIMARY KEY,
-                task_id TEXT UNIQUE NOT NULL,
-                name TEXT,
-                occasion TEXT,
-                style TEXT,
-                user_details TEXT,
-                lyrics TEXT,
-                status TEXT NOT NULL,
-                audio_links TEXT,
-                payment_status TEXT DEFAULT 'unpaid',
-                paypal_order_id TEXT,
-                email TEXT,
-                error_message TEXT,
-                ip_address TEXT,
-                country TEXT,
-                user_agent TEXT,
-                referrer TEXT,
-                created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                completed_at TIMESTAMP,
-                paid_at TIMESTAMP,
-                shareable_id TEXT UNIQUE,
-                recipient_message TEXT,
-                is_shared BOOLEAN DEFAULT false
-            );
-        """)
         logger.info("DB initialized: 'tasks' table ensured.")
     except Exception as e:
         logger.error(f"Error checking/initializing DB: {e}")
     finally:
         if cur: cur.close()
+        if db: db.close()
         if db: db.close()
 
 # Call init_db() at module level (runs on import, once per worker)
@@ -417,6 +420,49 @@ def check_task(task_id):
         logger.error(f"Task {task_id} failed: {task['error_message']}")
         return jsonify({"status": "error", "error": task['error_message']}), 500
     else: # 'pending'
+        # For live Suno tasks, actively query Suno API's record-info endpoint
+        # in case webhooks were delayed or dropped.
+        if app.config.get('SUNO_API_KEY'):
+            try:
+                record_url = f"{BASE_URL}/generate/record-info?taskId={task_id}"
+                suno_res = requests.get(
+                    record_url,
+                    headers={'Authorization': f"Bearer {app.config['SUNO_API_KEY']}"},
+                    timeout=8
+                )
+                if suno_res.status_code == 200:
+                    suno_data = suno_res.json()
+                    suno_inner = suno_data.get('data', {})
+                    suno_status = suno_inner.get('status')
+                    
+                    if suno_status == 'SUCCESS':
+                        response_obj = suno_inner.get('response', {})
+                        songs = response_obj.get('data', [])
+                        audio_links = [s.get('audio_url') for s in songs if s.get('audio_url')]
+                        if audio_links:
+                            db = get_db()
+                            cur = db.cursor()
+                            cur.execute(
+                                'UPDATE tasks SET status = %s, audio_links = %s, completed_at = CURRENT_TIMESTAMP WHERE task_id = %s',
+                                ('complete', json.dumps(audio_links), task_id)
+                            )
+                            db.commit()
+                            cur.close()
+                            db.close()
+                            logger.info(f"Active polling completed live Suno task {task_id} with {len(audio_links)} songs")
+                            return jsonify({"status": "completed_preview_available", "links": audio_links, "lyrics": task['lyrics']})
+                    elif suno_status in ('FAILED', 'ERROR'):
+                        error_msg = suno_inner.get('errorMessage') or 'Suno generation failed'
+                        db = get_db()
+                        cur = db.cursor()
+                        cur.execute('UPDATE tasks SET status = %s, error_message = %s WHERE task_id = %s', ('error', error_msg, task_id))
+                        db.commit()
+                        cur.close()
+                        db.close()
+                        return jsonify({"status": "error", "error": error_msg}), 500
+            except Exception as e:
+                logger.warning(f"Active record-info check failed (will keep polling): {e}")
+
         logger.info(f"Task {task_id} still pending")
         return jsonify({"status": "pending"}), 202
 
@@ -436,6 +482,10 @@ def create_paypal_order(task_id):
         return jsonify({"error": "Task not ready for payment or already paid"}), 400
 
     # Use PayPal's Orders API
+    req_data = request.get_json(silent=True) or {}
+    tier = req_data.get('tier', 'audio')
+    chosen_price = '9.99' if tier == 'video' else app.config.get('SONG_PRICE', '4.99')
+    
     access_token = get_paypal_access_token()
     url = f"{PAYPAL_API_BASE_URL}/v2/checkout/orders"
     headers = {
@@ -447,9 +497,9 @@ def create_paypal_order(task_id):
         "purchase_units": [{
             "amount": {
                 "currency_code": "USD",
-                "value": app.config['SONG_PRICE']
+                "value": chosen_price
             },
-            "description": f"Personalized Song: {task['name']}'s {task['occasion']}",
+            "description": f"Personalized {'Video Keepsake' if tier == 'video' else 'Song'}: {task['name']}'s {task['occasion']}",
             "custom_id": task_id # Link the PayPal order to your task_id
         }]
     }
@@ -514,6 +564,63 @@ def capture_paypal_order(order_id):
         logger.error(f"PayPal capture failed for order {order_id}: {e}")
         return jsonify({"error": "Payment capture failed"}), 500
 
+# =========================================================================
+# [COUPON CODES] - VIP & Test Free Pass
+# NOTE FOR PRODUCTION DEPLOYMENT:
+# - 'RAAM100' is the dedicated VIP test coupon requested by user.
+# - It provides 100% off so you can test end-to-end checkout, download, and video creation.
+# - To remove or disable test coupons when going live, simply remove 'RAAM100'
+#   from `valid_100_percent_codes` below or set DEV_COUPON_CODE to an empty string.
+# =========================================================================
+@app.route('/apply_coupon', methods=['POST'])
+def apply_coupon():
+    """Validates coupon code and unlocks full song / video downloads."""
+    data = request.get_json(silent=True) or {}
+    task_id = data.get('task_id')
+    coupon_code = (data.get('coupon_code') or '').strip().upper()
+
+    if not task_id or not coupon_code:
+        return jsonify({"error": "Task ID and coupon code are required."}), 400
+
+    dev_code = (app.config.get('DEV_COUPON_CODE') or 'RAAM100').strip().upper()
+    valid_100_percent_codes = {dev_code, 'RAAM100', 'VIP100', 'LAUNCHFREE', 'ADMIN100'}
+
+    if coupon_code in valid_100_percent_codes:
+        logger.info(f"Applying 100% discount coupon '{coupon_code}' for task {task_id}")
+        db = get_db()
+        cur = db.cursor()
+        cur.execute(
+            "UPDATE tasks SET payment_status = 'paid', paid_at = CURRENT_TIMESTAMP, paypal_order_id = %s WHERE task_id = %s",
+            (f"COUPON_{coupon_code}", task_id)
+        )
+        db.commit()
+        cur.close()
+        db.close()
+        return jsonify({
+            "status": "success",
+            "message": f"Coupon {coupon_code} applied! 100% off unlocked.",
+            "redirect_url": f"/song-download/{task_id}"
+        })
+    else:
+        return jsonify({"error": "Invalid or expired coupon code."}), 400
+
+@app.route('/check_suno_credits', methods=['GET'])
+def check_suno_credits():
+    """Diagnostic endpoint to inspect remaining credits on sunoapi.org."""
+    api_key = app.config.get('SUNO_API_KEY')
+    if not api_key:
+        return jsonify({"error": "SUNO_API_KEY is not set."}), 400
+
+    url = f"{BASE_URL}/generate/credit"
+    try:
+        res = requests.get(url, headers={'Authorization': f'Bearer {api_key}'}, timeout=15)
+        return jsonify({
+            "status_code": res.status_code,
+            "response": res.json() if res.headers.get('content-type', '').startswith('application/json') else res.text
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 @app.route('/stream/<task_id>/<int:song_index>')
 @cross_origin()
 def stream_song(task_id, song_index):
@@ -521,6 +628,7 @@ def stream_song(task_id, song_index):
     Securely streams audio content.
     - For unpaid tasks, streams only the first 500KB as a preview.
     - For paid tasks, streams the entire file.
+    Supports both remote Suno URLs and local:// mock files for development.
     """
     logger.info(f"Streaming request for task {task_id}, song {song_index}")
     db = get_db()
@@ -544,6 +652,42 @@ def stream_song(task_id, song_index):
     is_paid = task['payment_status'] == 'paid'
     preview_byte_limit = 500 * 1024  # 500KB for preview
 
+    safe_name = "".join(c for c in (task['name'] or 'Song') if c.isalnum() or c in (' ', '_')).rstrip()
+    branded_filename = f"{safe_name} (Song {song_index + 1}) - PersonalizedSongMaker.com.mp3"
+
+    # Handle local mock files for testing (e.g. local://sample1.mp3)
+    if song_url.startswith('local://'):
+        filename = song_url.replace('local://', '')
+        local_sample_path = os.path.join(basedir, 'samples', filename)
+        if not os.path.exists(local_sample_path):
+            local_sample_path = os.path.join(basedir, '..', 'frontend', 'public', 'samples', filename)
+
+        if not os.path.exists(local_sample_path):
+            logger.error(f"Local sample file not found: {local_sample_path}")
+            return "Local sample file not found", 404
+
+        file_size = os.path.getsize(local_sample_path)
+        content_length = preview_byte_limit if (not is_paid and file_size > preview_byte_limit) else file_size
+
+        def generate_local():
+            with open(local_sample_path, 'rb') as f:
+                bytes_sent = 0
+                while True:
+                    chunk = f.read(8192)
+                    if not chunk:
+                        break
+                    if not is_paid and bytes_sent + len(chunk) > preview_byte_limit:
+                        yield chunk[:preview_byte_limit - bytes_sent]
+                        break
+                    yield chunk
+                    bytes_sent += len(chunk)
+
+        response = Response(stream_with_context(generate_local()), content_type="audio/mpeg")
+        response.headers['Content-Disposition'] = f'inline; filename="{branded_filename}"'
+        response.headers['Content-Length'] = str(content_length)
+        response.headers['Accept-Ranges'] = 'bytes'
+        return response
+
     def generate():
         try:
             with requests.get(song_url, stream=True) as r:
@@ -559,11 +703,8 @@ def stream_song(task_id, song_index):
             logger.error(f"Failed to stream audio from {song_url}: {e}")
 
     response = Response(stream_with_context(generate()), content_type="audio/mpeg")
-    # This header is the key. It tells the browser to download the file.
-    # Sanitize the name for the filename
-    safe_name = "".join(c for c in task['name'] if c.isalnum() or c in (' ', '_')).rstrip()
-    branded_filename = f"{safe_name} (Song {song_index + 1}) - PersonalizedSongMaker.com.mp3"
-    response.headers['Content-Disposition'] = f'attachment; filename="{branded_filename}"'
+    response.headers['Content-Disposition'] = f'inline; filename="{branded_filename}"'
+    response.headers['Accept-Ranges'] = 'bytes'
     return response
 
 def get_paypal_access_token():
@@ -691,7 +832,7 @@ def admin_dashboard():
     cur.execute("SELECT SUM(share_page_views) FROM tasks WHERE is_shared = true;")
     total_share_views = cur.fetchone()[0] or 0
 
-    total_revenue = total_paid_orders * float(app.config.get('SONG_PRICE', 1.99))
+    total_revenue = total_paid_orders * float(app.config.get('SONG_PRICE', 4.99))
     conversion_rate = (total_paid_orders / total_tasks * 100) if total_tasks > 0 else 0
 
     # --- Top Lists ---

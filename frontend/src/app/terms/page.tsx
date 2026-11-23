@@ -1,4 +1,14 @@
+import type { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Terms of Service | Personalized Song Maker',
+  description:
+    'Review the terms and conditions for creating and downloading custom personalized songs on Personalized Song Maker.',
+  alternates: {
+    canonical: 'https://www.personalizedsongmaker.com/terms',
+  },
+};
 
 const TermsPage = () => {
   return (

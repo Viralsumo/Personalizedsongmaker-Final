@@ -1,4 +1,14 @@
+import type { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy | Personalized Song Maker',
+  description:
+    'Our privacy policy explains how Personalized Song Maker protects your personal memories, photos, and payment information.',
+  alternates: {
+    canonical: 'https://www.personalizedsongmaker.com/privacy',
+  },
+};
 
 const PrivacyPage = () => {
   return (

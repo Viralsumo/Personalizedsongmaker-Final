@@ -18,16 +18,16 @@ import {
 } from '@heroicons/react/24/solid';
 
 export const metadata: Metadata = {
-  title: 'Songfinch Alternative: Custom Studio Songs from $1.99 | Honest 2026 Comparison',
+  title: 'Songfinch Alternative: Custom Studio Songs from $4.99 | Honest 2026 Comparison',
   description:
-    'Comparing Songfinch vs Personalized Song Maker. Discover why thousands choose our instant, studio-quality custom songs from $1.99 with free previews over $199 upfront fees.',
+    'Comparing Songfinch vs Personalized Song Maker. Discover why thousands choose our instant, studio-quality custom songs from $4.99 with free previews over $199 upfront fees.',
   alternates: {
     canonical: 'https://www.personalizedsongmaker.com/songfinch-alternative',
   },
   openGraph: {
-    title: 'Songfinch Alternative: Custom Studio Songs from $1.99 (In 2 Mins)',
+    title: 'Songfinch Alternative: Custom Studio Songs from $4.99 (In 2 Mins)',
     description:
-      'Turn your personal story into a studio-grade song in 2 minutes for $1.99 instead of $199+. Full side-by-side comparison, audio samples, and free preview.',
+      'Turn your personal story into a studio-grade song in 2 minutes for $4.99 instead of $199+. Full side-by-side comparison, audio samples, and free preview.',
     url: 'https://www.personalizedsongmaker.com/songfinch-alternative',
     type: 'website',
   },
@@ -48,7 +48,7 @@ const jsonLd = {
       },
       offers: {
         '@type': 'Offer',
-        price: '1.99',
+        price: '4.99',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
         url: 'https://www.personalizedsongmaker.com/songfinch-alternative',
@@ -67,7 +67,7 @@ const jsonLd = {
           name: 'How is PersonalizedSongMaker different from Songfinch?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'While Songfinch charges $199+ and takes 4 to 7 days to deliver a human-recorded song, PersonalizedSongMaker leverages cutting-edge generative audio intelligence to deliver studio-quality personalized songs in under 3 minutes starting at just $1.99. Crucially, you get to hear an audio preview before paying anything.',
+            text: 'While Songfinch charges $199+ and takes 4 to 7 days to deliver a human-recorded song, PersonalizedSongMaker leverages cutting-edge generative audio intelligence to deliver studio-quality personalized songs in under 3 minutes starting at just $4.99. Crucially, you get to hear an audio preview before paying anything.',
           },
         },
         {
@@ -125,7 +125,7 @@ export default function SongfinchAlternativePage() {
             </div>
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-tight">
               Looking for a Songfinch Alternative? <br />
-              <span className="text-pink-600">Get Studio Songs for $1.99 in 2 Minutes</span>
+              <span className="text-pink-600">Get Studio Songs for $4.99 in 2 Minutes</span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
               Songfinch revolutionized personalized gifting, but paying <strong className="text-slate-900">$199 upfront</strong> and waiting <strong className="text-slate-900">7 days</strong> with zero previews is a huge commitment. Discover how PersonalizedSongMaker gives you heartfelt, studio-quality custom music instantly at 99% less cost.
@@ -136,7 +136,7 @@ export default function SongfinchAlternativePage() {
                 href="#create"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl text-lg font-bold text-white bg-pink-500 hover:bg-pink-600 shadow-lg shadow-pink-500/25 transition-all text-center"
               >
-                Create Your Song Now ($1.99)
+                Create Your Song Now ($4.99)
               </a>
               <a
                 href="#comparison"
@@ -205,7 +205,7 @@ export default function SongfinchAlternativePage() {
                       <td className="py-4 px-6 font-semibold text-slate-800">Starting Price</td>
                       <td className="py-4 px-6 text-slate-500">$199.99</td>
                       <td className="py-4 px-6 font-bold text-pink-600 bg-pink-50/40">
-                        $1.99 (99% Cheaper)
+                        $4.99 (98% Cheaper)
                       </td>
                     </tr>
                     <tr>
@@ -372,7 +372,7 @@ export default function SongfinchAlternativePage() {
                 <div>
                   <h3 className="text-lg font-bold text-slate-900">3. The 99% Cost Advantage Passed to You</h3>
                   <p className="mt-2 text-slate-600 text-sm leading-relaxed">
-                    Traditional services like Songfinch have to split your $199 fee between customer service reps, booking coordinators, studio engineers, and session musicians. Because our audio pipeline is fully automated and runs in seconds, we pass those savings directly to you at $1.99.
+                    Traditional services like Songfinch have to split your $199 fee between customer service reps, booking coordinators, studio engineers, and session musicians. Because our audio pipeline is fully automated and runs in seconds, we pass those savings directly to you at $4.99.
                   </p>
                 </div>
               </div>
@@ -435,7 +435,7 @@ export default function SongfinchAlternativePage() {
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckIcon className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
-                    <span><strong>You want supreme value:</strong> $1.99 delivers studio quality that makes recipients cry happy tears.</span>
+                    <span><strong>You want supreme value:</strong> $4.99 delivers studio quality that makes recipients cry happy tears.</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <CheckIcon className="h-5 w-5 text-green-600 flex-shrink-0 mt-0.5" />
@@ -507,7 +507,7 @@ export default function SongfinchAlternativePage() {
                   Why is Personalized Song Maker so much cheaper than Songfinch?
                 </h3>
                 <p className="mt-2 text-slate-600 leading-relaxed text-sm">
-                  Traditional services like Songfinch rely on hiring session musicians, studio rentals, and manual audio editing, creating large production overhead and charging $199+. PersonalizedSongMaker utilizes specialized AI songwriting and neural audio synthesis models, producing full radio-quality tracks in under 3 minutes for $1.99.
+                  Traditional services like Songfinch rely on hiring session musicians, studio rentals, and manual audio editing, creating large production overhead and charging $199+. PersonalizedSongMaker utilizes specialized AI songwriting and neural audio synthesis models, producing full radio-quality tracks in under 3 minutes for $4.99.
                 </p>
               </div>
 
@@ -516,7 +516,7 @@ export default function SongfinchAlternativePage() {
                   Do I have to pay before hearing my song?
                 </h3>
                 <p className="mt-2 text-slate-600 leading-relaxed text-sm">
-                  No! That is one of our biggest advantages over Songfinch. On our platform, you generate your custom lyrics and listen to your song preview completely free. You only pay $1.99 when you love the song and want to unlock the full track and gift page.
+                  No! That is one of our biggest advantages over Songfinch. On our platform, you generate your custom lyrics and listen to your song preview completely free. You only pay $4.99 when you love the song and want to unlock the full track and gift page.
                 </p>
               </div>
 

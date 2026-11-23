@@ -1,5 +1,15 @@
 import { HeartIcon, MusicalNoteIcon, SparklesIcon } from '@heroicons/react/24/outline';
+import type { Metadata } from 'next';
 import React from 'react';
+
+export const metadata: Metadata = {
+  title: 'About Us | Personalized Song Maker',
+  description:
+    'Learn how Personalized Song Maker turns your cherished memories, photos, and inside jokes into radio-grade custom songs & video keepsakes.',
+  alternates: {
+    canonical: 'https://www.personalizedsongmaker.com/about',
+  },
+};
 
 const AboutPage = () => {
   return (

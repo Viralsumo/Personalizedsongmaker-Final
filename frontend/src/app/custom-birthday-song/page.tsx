@@ -16,7 +16,7 @@ import {
 export const metadata: Metadata = {
   title: 'Custom Birthday Song with Name & Story | Personalized Birthday Gift',
   description:
-    'Create an unforgettable custom birthday song with their name, inside jokes, and special memories. Studio-quality pop or acoustic song in under 3 minutes for $1.99.',
+    'Create an unforgettable custom birthday song with their name, inside jokes, and special memories. Studio-quality pop or acoustic song in under 3 minutes for $4.99.',
   alternates: {
     canonical: 'https://www.personalizedsongmaker.com/custom-birthday-song',
   },
@@ -40,7 +40,7 @@ const jsonLd = {
       image: 'https://www.personalizedsongmaker.com/og-image.png',
       offers: {
         '@type': 'Offer',
-        price: '1.99',
+        price: '4.99',
         priceCurrency: 'USD',
         availability: 'https://schema.org/InStock',
         url: 'https://www.personalizedsongmaker.com/custom-birthday-song',
@@ -75,7 +75,7 @@ const jsonLd = {
           name: 'Can I hear the birthday song before I pay?',
           acceptedAnswer: {
             '@type': 'Answer',
-            text: 'Yes! You can generate the custom lyrics and listen to an audio preview completely free before deciding to download the full track for $1.99.',
+            text: 'Yes! You can generate the custom lyrics and listen to an audio preview completely free before deciding to download the full track for $4.99.',
           },
         },
         {
@@ -112,7 +112,7 @@ export default function CustomBirthdaySongPage() {
               <span className="text-purple-600">Starring Their Name &amp; Real Memories</span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              Say goodbye to generic greeting cards and boring &apos;Happy Birthday&apos; chants. Turn childhood memories, hilarious inside jokes, and personal milestones into an unforgettable studio song in <strong className="text-slate-900">under 3 minutes</strong> for just <strong className="text-purple-600">$1.99</strong>.
+              Say goodbye to generic greeting cards and boring &apos;Happy Birthday&apos; chants. Turn childhood memories, hilarious inside jokes, and personal milestones into an unforgettable studio song in <strong className="text-slate-900">under 3 minutes</strong> for just <strong className="text-purple-600">$4.99</strong>.
             </p>
 
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -120,7 +120,7 @@ export default function CustomBirthdaySongPage() {
                 href="#create"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl text-lg font-bold text-white bg-purple-600 hover:bg-purple-700 shadow-lg shadow-purple-600/25 transition-all text-center"
               >
-                Make a Birthday Song Now ($1.99)
+                Make a Birthday Song Now ($4.99)
               </a>
               <a
                 href="#samples"

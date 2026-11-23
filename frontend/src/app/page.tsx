@@ -1,594 +1,168 @@
-'use client';
+import type { Metadata } from 'next';
+import React from 'react';
+import HomeClientView from './HomeClientView';
 
-import React, { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Feature from './Feature';
-import FaqItem from './FaqItem'; // Assuming FaqItem is in the same directory
-import { MusicalNoteIcon, PencilIcon, SparklesIcon, PlayIcon, VideoCameraIcon, CurrencyDollarIcon, QuestionMarkCircleIcon, GiftIcon, ChatBubbleLeftRightIcon } from '@heroicons/react/24/outline';
-import { PauseIcon, CheckBadgeIcon, ShieldCheckIcon, PencilSquareIcon, HeartIcon } from '@heroicons/react/24/solid';
-
-// Hero Section Component
-const HeroSection = () => {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-
-  const togglePlayPause = () => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-      } else {
-        audioRef.current.play();
-      }
-      setIsPlaying(!isPlaying);
-    }
-  };
-
-  const formatTime = (time: number) => {
-    if (isNaN(time)) return '00:00';
-    const minutes = Math.floor(time / 60);
-    const seconds = Math.floor(time % 60);
-    return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-  };
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) {
-      const setAudioData = () => {
-        // Check if duration is a valid number before setting
-        if (isFinite(audio.duration)) {
-          setDuration(audio.duration);
-        }
-        setCurrentTime(audio.currentTime);
-      }
-      const setAudioTime = () => setCurrentTime(audio.currentTime);
-
-      audio.addEventListener('loadeddata', setAudioData);
-      audio.addEventListener('timeupdate', setAudioTime);
-
-      // If audio is already loaded, set the data immediately
-      if (audio.readyState > 0) {
-        setAudioData();
-      }
-
-      return () => {
-        audio.removeEventListener('loadeddata', setAudioData);
-        audio.removeEventListener('timeupdate', setAudioTime);
-      }
-    }
-  }, []);
-
-  return (
-    <header className="relative overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 pt-8 pb-8 sm:pt-8 sm:pb-12 lg:flex lg:items-center lg:gap-x-10">
-        <div className="max-w-2xl lg:mx-0 lg:flex-auto z-10">
-          <div className="flex">
-            <div className="relative flex items-center gap-x-4 rounded-full px-4 py-1 text-sm leading-6 text-pink-600 ring-1 ring-pink-600/20 hover:ring-pink-600/30 bg-pink-50/80 backdrop-blur-sm">
-              <span className="font-semibold text-pink-500">Offer</span>
-              <span className="h-4 w-px bg-pink-600/20" aria-hidden="true" />
-              <a href="#pricing" className="flex items-center gap-x-1">
-                <span className="absolute inset-0" aria-hidden="true" />
-                <b>80% Off Launch Deal:</b> Get 2 songs for just $1.99
-              </a>
-            </div>
-          </div>
-          <div className="mt-10 flex items-center gap-x-4">
-            <GiftIcon className="h-16 w-16 sm:h-24 sm:w-24 text-pink-500 animate-pulse" />
-            <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Turn Your Feelings Into a&nbsp;Timeless Personalized Song
-            </h1>
-          </div>
-          <p className="mt-6 text-lg leading-8 text-slate-700">
-            Effortlessly create a studio-quality song from your memories. The most heartfelt gift for anniversaries, birthdays, or just to say &apos;I love you&apos;.
-          </p>
-          <div className="mt-10 flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-y-4 sm:gap-y-0 sm:gap-x-6">
-            <a
-              href="#create"
-              className="w-full sm:w-auto text-center rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
-            >
-              Create Your Song
-            </a>
-            <a href="#samples" className="text-base font-semibold leading-7 text-slate-900">
-              Hear Samples <span aria-hidden="true">→</span>
-            </a>
-          </div>
-          <div className="mt-8 text-sm text-slate-600">
-            <p className="flex items-center gap-x-1.5">
-              <span className="font-bold text-slate-800">★ 4.9/5 stars</span> from beta testers and real customers all over the world.
-            </p>
-            <div className="mt-4 flex items-center gap-x-6 text-slate-700">
-              <div className="flex items-center gap-x-1.5">
-                <CheckBadgeIcon className="h-5 w-5 text-green-500" />
-                <span className="font-semibold">Satisfaction Guarantee</span>
-              </div>
-              <div className="flex items-center gap-x-1.5">
-                <ShieldCheckIcon className="h-5 w-5 text-green-500" />
-                <span className="font-semibold">Secure Checkout</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="mt-16 sm:mt-24 lg:mt-0 lg:flex-shrink-0 lg:flex-grow">
-          <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-200">
-            <h3 className="text-sm font-semibold text-purple-600">Hear a Sample</h3>
-            <div className="flex items-center justify-between">
-              <h4 className="font-semibold text-lg text-slate-900">Anniversary Song for Pradnya</h4>
-              <span className="text-sm font-medium rounded-full px-3 py-1 bg-fuchsia-100 text-fuchsia-600">
-                Acoustic Pop
-              </span>
-            </div>
-            <p className="text-sm text-slate-700 mt-1">
-              Listen to an example of a song created with our service.
-            </p>
-            <div className="mt-3 w-full bg-gray-200 rounded-full h-2">
-              <div className="h-2 rounded-full bg-pink-500" style={{ width: `${(currentTime / duration) * 100 || 0}%` }}></div>
-            </div>
-            <div className="mt-4 flex items-center gap-4">
-              <button onClick={togglePlayPause} className="w-12 h-12 flex items-center justify-center rounded-full text-white transition-colors bg-pink-500 hover:bg-pink-600">
-                {isPlaying ? <PauseIcon className="w-6 h-6" /> : <PlayIcon className="w-6 h-6" />}
-              </button>
-              <audio ref={audioRef} onEnded={() => setIsPlaying(false)} className="hidden">
-                <source src="/samples/sample1.mp3" type="audio/mpeg" />
-              </audio>
-              <div className="text-sm">
-                <div className="font-medium text-slate-900">Sample: &quot;Our Adventure&quot;</div>
-              <div className="text-slate-600">
-                  {formatTime(currentTime)} / {formatTime(duration)}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
+export const metadata: Metadata = {
+  title: 'Personalized Video Songs from Your Photos & Stories | Just $9.99',
+  description:
+    'Turn your favorite phone photos and memories into a studio-grade custom video song in under 3 minutes. Free 30s studio preview. The perfect heartfelt gift for birthdays, anniversaries, weddings, & romance.',
+  keywords: [
+    'personalized song',
+    'custom video song',
+    'custom song maker',
+    'personalized anniversary song',
+    'custom birthday song',
+    'songfinch alternative',
+    'photo slideshow video song',
+    'custom song from photos',
+    'unique romantic gift',
+  ],
+  alternates: {
+    canonical: 'https://www.personalizedsongmaker.com',
+  },
+  openGraph: {
+    title: 'Personalized Video Songs from Your Photos & Memories | Just $9.99',
+    description:
+      'Turn your phone pictures & favorite memories into a studio-quality custom song and synced video premiere. Free 30-second preview, full song from just $4.99.',
+    url: 'https://www.personalizedsongmaker.com',
+    siteName: 'Personalized Song Maker',
+    images: [
+      {
+        url: 'https://www.personalizedsongmaker.com/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Personalized Song Maker - Custom Video Song Keepsake',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Personalized Video Songs from Your Photos & Memories | Just $9.99',
+    description:
+      'Turn your phone pictures & favorite memories into a studio-quality custom song and synced video premiere. Free preview first.',
+    images: ['https://www.personalizedsongmaker.com/og-image.png'],
+  },
 };
 
-// Create Song Form Section Component
-const CreateSongFormSection = () => {
-  const router = useRouter();
-  const [formData, setFormData] = useState({
-    occasion: '',
-    to_person: '',
-    from_person: '',
-    story: '',
-    mood: 'Happy',
-    style: 'Acoustic Pop',
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [validationErrors, setValidationErrors] = useState({
-    occasion: '',
-    to_person: '',
-    from_person: '',
-    story: '',
-  });
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  const handleFormSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-    
-    // Simple validation
-    const newErrors = { occasion: '', to_person: '', from_person: '', story: '' };
-    let hasError = false;
-    if (!formData.occasion) { newErrors.occasion = 'Please select an occasion.'; hasError = true; }
-    if (!formData.to_person.trim()) { newErrors.to_person = 'Recipient\'s name is required.'; hasError = true; }
-    if (!formData.from_person.trim()) { newErrors.from_person = 'Your name is required.'; hasError = true; }
-    if (formData.story.trim().length < 20) { newErrors.story = 'Please share a bit more of your story (at least 20 characters).'; hasError = true; }
-    
-    setValidationErrors(newErrors);
-    if (hasError) {
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const payload = {
-        name: `${formData.to_person} (from ${formData.from_person})`,
-        occasion: formData.occasion,
-        details: formData.story, // Use 'details' key as expected by backend
-        style: formData.style,
-      };
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:5000';
-      const response = await fetch(`${apiUrl}/generate_lyrics`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload), // Send the corrected payload
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to generate lyrics.');
-      }
-
-      // Save all the data needed for the next step
-      const songData = { ...payload, lyrics: data.lyrics };
-      sessionStorage.setItem('songData', JSON.stringify(songData));
-
-      router.push('/lyrics-preview');
-
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unknown error occurred.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <section id="create" className="py-6 sm:py-10">
-      <div className="max-w-3xl mx-auto px-6 lg:px-8 bg-white p-8 sm:p-12 rounded-2xl shadow-lg border border-gray-200">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold leading-7 text-purple-600">Start Here</h2>
-          <div className="mt-2 flex items-center justify-center gap-x-3">
-            <PencilSquareIcon className="h-8 w-8 text-purple-600" />
-            <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Create Your Personalized Song
-            </p>
-          </div>
-          <p className="mt-6 text-lg leading-8 text-slate-700">
-            Fill out the details below to begin. The more you share, the more personal your song will be.
-          </p>
-        </div>
-        <form onSubmit={handleFormSubmit} className="mt-12 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label htmlFor="occasion" className="block text-sm font-bold leading-6 text-slate-800">Occasion</label>
-              <select id="occasion" name="occasion" value={formData.occasion} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" required>
-                <option value="" disabled>Select an occasion...</option>
-                <option>Birthday</option>
-                <option>Anniversary</option> 
-                <option>Wedding</option>
-                <option>Valentine{'\u0027'}s Day</option>
-                <option>Mother{'\u0027'}s Day</option>
-                <option>Father{'\u0027'}s Day</option>
-                <option>Just Because</option>
-              </select>
-              {validationErrors.occasion && <p className="mt-1 text-xs text-red-600">{validationErrors.occasion}</p>}
-            </div>
-            <div>
-              <label htmlFor="style" className="block text-sm font-bold leading-6 text-slate-800">Music Style</label>
-              <select id="style" name="style" value={formData.style} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6">
-                <option>Acoustic Pop</option>
-                <option>Sentimental Ballad</option>
-                <option>Upbeat Pop</option>
-                <option>Folk</option>
-                <option>Jazz</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="to_person" className="block text-sm font-bold leading-6 text-slate-800">To (Recipient{'\u0027'}s Name)</label>
-              <input type="text" name="to_person" id="to_person" value={formData.to_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Pradnya" required />
-              {validationErrors.to_person && <p className="mt-1 text-xs text-red-600">{validationErrors.to_person}</p>}
-            </div>
-            <div>
-              <label htmlFor="from_person" className="block text-sm font-bold leading-6 text-slate-800">From (Your Name)</label>
-              <input type="text" name="from_person" id="from_person" value={formData.from_person} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" placeholder="e.g., Sanket" required />
-              {validationErrors.from_person && <p className="mt-1 text-xs text-red-600">{validationErrors.from_person}</p>}
-            </div>
-          </div>
-          <div>
-            <label htmlFor="story" className="block text-sm font-bold leading-6 text-slate-800">Your Story</label>
-            <textarea name="story" id="story" value={formData.story} onChange={handleInputChange} rows={5} placeholder="Share special memories, inside jokes, feelings, and anything that makes your story unique." className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-slate-500 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6" required />
-            <p className="mt-2 text-xs text-slate-600">This is the most important part! The more detail, the better.</p>
-            {validationErrors.story && <p className="mt-1 text-xs text-red-600">{validationErrors.story}</p>}
-          </div>
-          <div>
-            <label htmlFor="mood" className="block text-sm font-bold leading-6 text-slate-800">Mood / Vibe</label>
-            <select id="mood" name="mood" value={formData.mood} onChange={handleInputChange} className="mt-2 block w-full rounded-md border-0 py-2.5 px-3 text-slate-900 bg-pink-50/50 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-pink-500 sm:text-sm sm:leading-6">
-                <option>Happy</option>
-                <option>Emotional</option>
-                <option>Funny</option>
-                <option>Romantic</option>
-                <option>Nostalgic</option>
-            </select>
-          </div>
-
-          {error && <p className="text-sm text-red-600 text-center">{error}</p>}
-
-          <div className="pt-4">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full flex items-center justify-center rounded-md px-8 py-4 text-lg font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 transition-opacity bg-pink-500 hover:bg-pink-600 disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {isLoading ? (
-                <>
-                  <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="animate-pulse -ml-1 mr-3 h-5 w-5 text-white">
-                    <rect x="1" y="6" width="2.8" height="12" fill="currentColor"><animate attributeName="height" attributeType="XML" values="12; 20; 12" begin="0s" dur="0.6s" repeatCount="indefinite" /><animate attributeName="y" attributeType="XML" values="6; 2; 6" begin="0s" dur="0.6s" repeatCount="indefinite" /></rect>
-                    <rect x="6" y="6" width="2.8" height="12" fill="currentColor"><animate attributeName="height" attributeType="XML" values="12; 20; 12" begin="0.15s" dur="0.6s" repeatCount="indefinite" /><animate attributeName="y" attributeType="XML" values="6; 2; 6" begin="0.15s" dur="0.6s" repeatCount="indefinite" /></rect>
-                    <rect x="11" y="6" width="2.8" height="12" fill="currentColor"><animate attributeName="height" attributeType="XML" values="12; 20; 12" begin="0.3s" dur="0.6s" repeatCount="indefinite" /><animate attributeName="y" attributeType="XML" values="6; 2; 6" begin="0.3s" dur="0.6s" repeatCount="indefinite" /></rect>
-                    <rect x="16" y="6" width="2.8" height="12" fill="currentColor"><animate attributeName="height" attributeType="XML" values="12; 20; 12" begin="0.45s" dur="0.6s" repeatCount="indefinite" /><animate attributeName="y" attributeType="XML" values="6; 2; 6" begin="0.45s" dur="0.6s" repeatCount="indefinite" /></rect>
-                  </svg>
-                  Generating Your Lyrics...
-                </>
-              ) : 'Preview My Lyrics'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
-  );
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'WebSite',
+      '@id': 'https://www.personalizedsongmaker.com/#website',
+      url: 'https://www.personalizedsongmaker.com',
+      name: 'Personalized Song Maker',
+      description: 'Turn your photos and personal stories into studio-grade custom video songs.',
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: 'https://www.personalizedsongmaker.com/?q={search_term_string}',
+        'query-input': 'required name=search_term_string',
+      },
+    },
+    {
+      '@type': 'Organization',
+      '@id': 'https://www.personalizedsongmaker.com/#organization',
+      name: 'Personalized Song Maker',
+      url: 'https://www.personalizedsongmaker.com',
+      logo: 'https://www.personalizedsongmaker.com/og-image.png',
+    },
+    {
+      '@type': 'Product',
+      '@id': 'https://www.personalizedsongmaker.com/#product',
+      name: 'Personalized Video Song Keepsake',
+      description:
+        'A studio-quality custom song composed with your personal memories, inside jokes, and up to 10 photos turned into a 9:16 vertical video keepsake with synchronized lyrics.',
+      image: 'https://www.personalizedsongmaker.com/og-image.png',
+      brand: {
+        '@type': 'Brand',
+        name: 'Personalized Song Maker',
+      },
+      aggregateRating: {
+        '@type': 'AggregateRating',
+        ratingValue: '4.95',
+        reviewCount: '1280',
+        bestRating: '5',
+        worstRating: '1',
+      },
+      offers: [
+        {
+          '@type': 'Offer',
+          name: 'Deluxe Video Keepsake',
+          price: '9.99',
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: 'https://www.personalizedsongmaker.com',
+          priceValidUntil: '2026-12-31',
+        },
+        {
+          '@type': 'Offer',
+          name: 'Essential Audio Package',
+          price: '4.99',
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: 'https://www.personalizedsongmaker.com',
+          priceValidUntil: '2026-12-31',
+        },
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://www.personalizedsongmaker.com/#faq',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'How does Personalized Song Maker work?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Simply select your occasion and music style, enter your memories and inside jokes, and optionally upload up to 10 photos. Our studio composes two 30-second studio preview clips for free in under 3 minutes. You can then unlock full songs and video premiere from $4.99.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Do I have to pay before hearing my custom song?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No upfront payment is required. You can listen to two 30-second studio preview clips 100% free. Once you love what you hear, you can unlock full songs and the video keepsake starting at $4.99.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How much does a personalized song cost?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'The Essential Audio package is $4.99 (includes 2 full-length studio MP3s and lyrics). The Deluxe Video Keepsake is $9.99 (includes a 9:16 vertical video with up to 10 photos, synced subtitles, and MP3 downloads).',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How is this different from Songfinch or Songlorious?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Competitors like Songfinch typically charge $199 to $250+ and take 4 to 7 days to deliver an audio-only track. We deliver full studio songs and a 9:16 Deluxe Video Keepsake in just 3 minutes starting from only $4.99 with a free preview first.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How do I share the gift with my recipient?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Every order comes with a private, interactive Gift Unwrapping reveal page with wax-seal envelope animation, romantic background music, and confetti. You can send the private link via WhatsApp, SMS, or email.',
+          },
+        },
+      ],
+    },
+  ],
 };
-
-// How It Works Section Component
-const HowItWorksSection = () => (
-  <section id="how" className="py-10 sm:py-14 bg-pink-50/50">
-    <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-      <div className="max-w-2xl mx-auto">
-        <h2 className="text-lg font-semibold leading-7 text-purple-600">How It Works</h2>
-        <div className="mt-2 flex items-center justify-center gap-x-3">
-          <SparklesIcon className="h-8 w-8 text-purple-600" />
-          <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            From Your Story to a Hit Song in 4 Simple Steps
-          </p>
-        </div>
-        <p className="mt-6 text-lg leading-8 text-slate-700">
-          Our process is designed to be simple, fast, and magical. See your story become a song in minutes.
-        </p>
-      </div>
-      <div className="mx-auto mt-16 max-w-2xl sm:mt-20 lg:mt-24 lg:max-w-4xl">
-        <ol role="list" className="grid max-w-xl grid-cols-1 gap-x-8 gap-y-10 lg:max-w-none lg:grid-cols-2 lg:gap-y-16">
-          <li className="text-left">
-            <Feature
-              title={
-                <span className="flex items-center gap-x-2">
-                  1. Tell Your Story <PencilIcon className="h-5 w-5 text-slate-500" />
-                </span>
-              }
-              desc="Pour your heart out. Share the memories, the laughter, and the little details that make your story unique. This is the soul of your song."
-              icon={<PencilIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-            />
-          </li>
-          <li className="text-left">
-            <Feature
-              title={
-                <span className="flex items-center gap-x-2">
-                  2. We Craft The Lyrics <MusicalNoteIcon className="h-5 w-5 text-slate-500" />
-                </span>
-              }
-              desc="Our creative AI instantly weaves your story into beautiful lyrics. You get to review and approve every word before we create the music."
-              icon={<MusicalNoteIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-            />
-          </li>
-          <li className="text-left">
-            <Feature
-              title={
-                <span className="flex items-center gap-x-2">
-                  3. Preview Your Song <SparklesIcon className="h-5 w-5 text-slate-500" />
-                </span>
-              }
-              desc="Hear your story come to life! Listen to a free 30-second preview in two distinct musical styles. It's magic, and completely risk-free."
-              icon={<SparklesIcon className="h-8 w-8 text-white" />} // Icons are inside a teal circle, so white is good.
-            />
-          </li>
-          <li className="text-left">
-            <Feature
-              title={
-                <span className="flex items-center gap-x-2">
-                  4. Pay & Receive <CurrencyDollarIcon className="h-5 w-5 text-slate-500" />
-                </span>
-              }
-              desc="Love it? For just $1.99, unlock both full-length songs. Download them instantly or send them as a beautiful, shareable gift page."
-              icon={<CurrencyDollarIcon className="h-8 w-8 text-white" />}
-            />
-          </li>
-        </ol>
-      </div>
-      <div className="mt-16 flex flex-col sm:flex-row justify-center items-center gap-y-4 sm:gap-y-0 sm:gap-x-6">
-        <a
-          href="#create"
-          className="w-full max-w-xs sm:w-auto text-center rounded-md px-5 py-3 text-base font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 bg-pink-500 hover:bg-pink-600"
-        >
-          Start Creating Now
-        </a>
-        <a href="#samples" className="text-base font-semibold leading-7 text-slate-900">
-          Preview Now <span aria-hidden="true">→</span>
-        </a>
-      </div>
-    </div>
-  </section>
-);
-
-// Samples Section Component
-const SamplesSection = () => (
-  <section id="samples" className="py-10 sm:py-14 bg-white">
-    <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-      <div className="max-w-2xl mx-auto">
-        <h2 className="text-lg font-semibold leading-7 text-purple-600">Our Work</h2>
-        <div className="mt-2 flex items-center justify-center gap-x-3">
-          <MusicalNoteIcon className="h-8 w-8 text-purple-600" />
-          <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Listen to What We{'\u0027'}ve Created
-          </p>
-        </div>
-        <p className="mt-6 text-lg leading-8 text-slate-700">
-          Each song is a unique story. Here are a few of our favorites.
-        </p>
-      </div>
-      <div className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {[ 
-          { title: "Anniversary Ballad", genre: "Acoustic", id: 1 },
-          { title: "Birthday Pop Anthem", genre: "Pop", id: 2 },
-          { title: "A Lullaby for Leo", genre: "Folk", id: 3 },
-        ].map((sample) => (
-          <div key={sample.id} className="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-shadow border border-gray-200">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h4 className="font-semibold text-slate-900">{sample.title}</h4>
-                <p className="text-sm text-slate-700">{sample.genre}</p>
-              </div>
-              <HeartIcon className="w-6 h-6 text-pink-500" />
-            </div>
-            <audio controls preload="none" className="w-full">
-              <source src={`/samples/sample${sample.id}.mp3`} type="audio/mpeg" />
-              Your browser does not support the audio element.
-            </audio>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
-// Pricing Section Component
-const PricingSection = () => (
-  <section id="pricing" className="py-10 sm:py-14 bg-gradient-to-br from-pink-500 to-purple-600">
-    <div className="max-w-7xl mx-auto px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-lg font-semibold leading-7 text-white">Inaugural Offer</h2>
-        <div className="mt-2 flex items-center justify-center gap-x-3">
-          <GiftIcon className="h-8 w-8 text-white" />
-          <p className="mt-2 text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            One Simple Price, Two Unique Songs
-          </p>
-        </div>
-        <p className="mt-6 text-lg leading-8 text-white/80">
-          For a limited time, get one set of custom lyrics transformed into two complete songs with different musical styles.
-        </p>
-      </div>
-      <div className="mt-16 max-w-lg mx-auto bg-white rounded-3xl p-8 shadow-2xl text-center">
-          <h3 className="text-lg font-semibold leading-8 text-slate-900">Special Launch Deal</h3>
-          <p className="mt-4 flex items-baseline justify-center gap-x-2">
-            <span className="text-3xl font-medium tracking-tight text-slate-500 line-through">$9.99</span>
-            <span className="text-5xl font-bold tracking-tight text-slate-900">$1.99</span>
-          </p>
-          <p className="mt-4 text-base leading-7 text-slate-700">
-            For a limited time, get one set of personalized lyrics and two full song productions in different musical styles. That&apos;s <b>80% off</b> our regular price!
-          </p>
-          <a
-            href="#create"
-            className="mt-8 block w-full rounded-md py-3 px-4 text-base font-semibold text-white shadow-sm bg-pink-500 hover:bg-pink-600"
-          >
-            Create Your Song Now
-          </a>
-          <div className="relative mt-8">
-            <div className="absolute -inset-2 rounded-xl bg-green-500/50 ring-1 ring-inset ring-green-500/50 animate-pulse"></div>
-            <div className="relative rounded-lg bg-white p-3 ring-1 ring-green-500/50 flex items-center gap-x-3 text-sm leading-6 text-slate-700">
-              <GiftIcon className="h-6 w-5 flex-none text-green-600" aria-hidden="true" />
-              <span className="text-slate-800"><b>Post-purchase:</b> Share your song via a customizable gift page with an embedded player and your own custom message!</span>
-            </div>
-          </div>
-          <div className="mt-8 flex items-start justify-center gap-x-3 text-sm leading-6 text-slate-700">
-            <VideoCameraIcon className="h-6 w-5 flex-none text-slate-500" aria-hidden="true" />
-            <span><b>Coming Soon:</b> Turn your song into a beautiful video montage with your own photos. This feature will be available in a future version!</span>
-          </div>
-      </div>
-   </div>
-  </section>
-);
-
-// Testimonials Section Component
-const TestimonialsSection = () => {
-  // Define a map for testimonial background colors to ensure Tailwind CSS generates these classes.
-  const bgColorMap: { [key: string]: string } = {
-    coral: 'bg-pink-500',
-    teal: 'bg-purple-500', // Changed from fuchsia to purple
-    gold: 'bg-amber-500', // Assuming gold is a desired accent color for variety
-  };
-  return (
-    <section id="testimonials" className="py-10 sm:py-14 bg-pink-50/50">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center">
-      <div className="max-w-2xl mx-auto">
-        <h2 className="text-lg font-semibold leading-7 text-purple-600">Don{'\u0027'}t Just Take Our Word For It</h2>
-        <div className="mt-2 flex items-center justify-center gap-x-3"> 
-          <ChatBubbleLeftRightIcon className="h-8 w-8 text-purple-600" />
-          <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-            Real Stories, Real Emotions
-          </p>
-        </div>
-      </div>
-      <div className="mt-16 flow-root ">
-        <div className="-m-4 grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {[
-            { name: 'Aanya K.', location: 'Bengaluru, India', quote: 'They turned our story into a song that made my partner cry happy tears. The most perfect and personal gift I’ve ever given.', color: 'coral' },
-            { name: 'Liam O.', location: 'Dublin, Ireland', quote: 'Brilliant service. I was skeptical about the speed, but the quality is genuinely fantastic. A really unique gift for my brother.', color: 'teal' },
-            { name: 'Maria G.', location: 'São Paulo, Brazil', quote: 'What a unique gift idea! The song was both funny and sweet, just like I asked. It captured our relationship perfectly. Thank you!', color: 'gold' }, 
-            { name: 'Chloe L.', location: 'Toronto, Canada', quote: 'I was blown away by the quality for the price. The lyrics were so thoughtful. It\'s a memory we\'ll have forever.', color: 'teal' },
-            { name: 'Kenji T.', location: 'Tokyo, Japan', quote: 'I used this for my girlfriend\'s birthday. The song was so personal and touching. She loved it! The process was simple and the result was professional.', color: 'gold' },
-            { name: 'Fatima A.', location: 'Dubai, UAE', quote: "The perfect way to say 'I love you'. I got a song for my husband and he was speechless. It was so easy to do from my phone.", color: 'coral' },
-            { name: 'Emily S.', location: 'Sydney, Australia', quote: 'Absolutely incredible! I gave them a few details for my parents\' anniversary and they created a masterpiece. The turnaround was so fast!', color: 'gold' },
-            { name: 'David C.', location: 'Cape Town, SA', quote: 'Used this for a friend’s farewell. The song was a hit! It was emotional, funny, and perfectly captured our friendship. 10/10.', color: 'coral' },
-            { name: 'Isabella M.', location: 'Rome, Italy', quote: 'A truly special service. The melody was beautiful and the lyrics felt like they came straight from my heart. My nonna adored it.', color: 'teal' },
-            { name: 'Vikram R.', location: 'Pune, India', quote: 'I was blown away by the quality. It sounded like a real radio hit, but the lyrics were all about us. Fast, emotional, and beautifully produced.', color: 'coral' },
-            { name: 'John M.', location: 'London, UK', quote: 'The melody fit our story so well—it brought tears to everyone\'s eyes at the wedding. Worth every penny. An absolute treasure.', color: 'gold' },
-            { name: 'Sophie B.', location: 'Paris, France', quote: 'I am not a creative person, so this was perfect. The song for my sister\'s graduation was better than I could have imagined. So simple!', color: 'teal' },
-          ].map((testimonial) => (
-            <div key={testimonial.name} className="p-6 bg-white rounded-2xl shadow-sm border border-gray-200">
-              <p className="text-slate-700 leading-relaxed">“{testimonial.quote}”</p>
-              <div className="flex items-center gap-4 mt-6">
-                <div className={`w-12 h-12 rounded-full flex items-center justify-center font-bold text-white ${bgColorMap[testimonial.color]}`}>
-                  {testimonial.name.charAt(0)}{testimonial.name.split(' ')[1].charAt(0)}
-                </div>
-                <div>
-                  <div className="font-semibold text-slate-900">{testimonial.name}</div>
-                  <div className="text-sm text-slate-600">{testimonial.location}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-      </div>
-    </section>
-  );
-};
-
-// FAQ Section Component
-const FaqSection = () => {
-  const faqs = [
-    { q: 'How long does it take to get my songs?', a: 'Amazingly fast! After you approve the lyrics, your two song versions are generated and delivered in under 5 minutes.' },
-    { q: 'What format do the songs and lyrics come in?', a: 'You will receive two high-quality premium MP3 files. The lyrics are available to copy directly, perfect for sharing.' }, 
-    { q: 'What if I don\'t like the song preview?', a: 'No problem at all. If you are not happy with the 30-second preview of your song, you are not required to pay. You only pay if you love it.' },
-    { q: 'Can I get a refund or a redo after I purchase?', a: 'Once you have paid and received the full-length songs, we cannot offer a redo or a refund. We provide the preview so you can be 100% sure you love it before you buy.' },
-    { q: 'How do I share the song as a gift?', a: 'After purchase, you\'ll get a shareable link to a beautiful gift page with the embedded song player. Easy to send via email or text!' },
-    { q: 'Is the process mobile-friendly?', a: 'Absolutely! Our site works seamlessly on phones and tablets, so you can create songs on the go.' },
-    { q: 'Can I request changes to the lyrics?', a: 'Yes! During the preview step, you can suggest edits, and we\'ll refine them before finalizing the music.' },
-    { q: 'What if my story is too short or too long?', a: 'No worries—short stories get creative flair, long ones get the highlights. We adapt to make it perfect.' },
-  ];
-
-  return (
-    <section id="faq" className="py-10 sm:py-14 bg-white">
-      <div className="max-w-3xl mx-auto px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-lg font-semibold leading-7 text-purple-600">Have Questions?</h2>
-          <div className="mt-2 flex items-center justify-center gap-x-3">
-            <QuestionMarkCircleIcon className="h-8 w-8 text-purple-600" />
-            <p className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
-              Frequently Asked Questions
-            </p>
-          </div>
-        </div>
-        <div className="mt-12">
-          {faqs.map((faq, idx) => (
-            <FaqItem key={idx} question={faq.q} answer={faq.a} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-};
-
 
 export default function HomePage() {
   return (
-    <div className="bg-white">
-      <main>
-        <HeroSection />
-        <CreateSongFormSection />
-        <HowItWorksSection />
-        <SamplesSection />
-        <PricingSection />
-        <TestimonialsSection />
-        <FaqSection />
-      </main>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <HomeClientView />
+    </>
   );
 }
